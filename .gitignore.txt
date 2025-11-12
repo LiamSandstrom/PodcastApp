@@ -1,0 +1,102 @@
+## .NET och Visual Studio standard
+
+# Byggmappar
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+TestResults/
+out/
+artifacts/
+*.exe
+*.dll
+*.pdb
+*.cache
+*.mdb
+
+# User-specifika filer
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+*.vscode/
+
+# Visual Studio
+.vs/
+.vscode/
+*.code-workspace
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+packages/
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
+
+# Dotnet-verktyg
+.project.json
+global.json
+*.lock.json
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Test och coverage
+*.coverage
+*.coveragexml
+*.testsettings
+*.runsettings
+TestResult.xml
+*.trx
+coverage.*
+.vstest/
+
+# Kompilerade resurser
+*.g.i.cs
+*.g.cs
+*.AssemblyAttributes.cs
+
+# Publish-mappar
+publish/
+AppPackages/
+BundleArtifacts/
+*_i.c
+
+# Entity Framework
+Migrations/
+
+# Tidsfiler / tillfälliga lås
+*.lock
+*.tmp
+*.temp
+*.bak
+
+# Användarhemligheter
+secrets.json
+appsettings.*.json
+!appsettings.json
+
+# Paketåterställning
+.nuget/
+.nuget/packages/
+
+# Windows Presentation Foundation (WPF)
+*.baml
+*.xaml.cs
+
+# WinForms Designer-filer
+*.Designer.cs
+*.resx
+
+# Build cache
+msbuild.binlog
