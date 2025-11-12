@@ -8,19 +8,19 @@
     "net8.0-windows7.0": []
   },
   "packageFolders": {
-    "C:\\Users\\Liam\\.nuget\\packages\\": {}
+    "C:\\Users\\Chepe\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Liam\\Documents\\GitHub\\PodcastApp\\UI\\UI.csproj",
+      "projectUniqueName": "C:\\Users\\Chepe\\Documents\\GitHub\\PodcastApp\\UI\\UI.csproj",
       "projectName": "UI",
-      "projectPath": "C:\\Users\\Liam\\Documents\\GitHub\\PodcastApp\\UI\\UI.csproj",
-      "packagesPath": "C:\\Users\\Liam\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Liam\\Documents\\GitHub\\PodcastApp\\UI\\obj\\",
+      "projectPath": "C:\\Users\\Chepe\\Documents\\GitHub\\PodcastApp\\UI\\UI.csproj",
+      "packagesPath": "C:\\Users\\Chepe\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Chepe\\Documents\\GitHub\\PodcastApp\\UI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Liam\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Chepe\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -70,7 +70,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

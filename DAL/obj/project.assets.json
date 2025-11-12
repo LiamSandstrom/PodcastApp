@@ -8,19 +8,19 @@
     "net8.0": []
   },
   "packageFolders": {
-    "C:\\Users\\Liam\\.nuget\\packages\\": {}
+    "C:\\Users\\Chepe\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Liam\\Documents\\GitHub\\PodcastApp\\DAL\\DAL.csproj",
+      "projectUniqueName": "C:\\Users\\Chepe\\Documents\\GitHub\\PodcastApp\\DAL\\DAL.csproj",
       "projectName": "DAL",
-      "projectPath": "C:\\Users\\Liam\\Documents\\GitHub\\PodcastApp\\DAL\\DAL.csproj",
-      "packagesPath": "C:\\Users\\Liam\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Liam\\Documents\\GitHub\\PodcastApp\\DAL\\obj\\",
+      "projectPath": "C:\\Users\\Chepe\\Documents\\GitHub\\PodcastApp\\DAL\\DAL.csproj",
+      "packagesPath": "C:\\Users\\Chepe\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Chepe\\Documents\\GitHub\\PodcastApp\\DAL\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Liam\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Chepe\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -67,7 +67,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
