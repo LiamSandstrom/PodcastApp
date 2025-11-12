@@ -75,18 +75,18 @@ BundleArtifacts/
 # Entity Framework
 Migrations/
 
-# Tidsfiler / tillf√§lliga l√•s
+# Tidsfiler / tillf‰lliga lÂs
 *.lock
 *.tmp
 *.temp
 *.bak
 
-# Anv√§ndarhemligheter
+# Anv‰ndarhemligheter
 secrets.json
 appsettings.*.json
 !appsettings.json
 
-# Paket√•terst√§llning
+# PaketÂterst‰llning
 .nuget/
 .nuget/packages/
 
