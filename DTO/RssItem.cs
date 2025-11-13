@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DTO
 {
-    internal class RssItem
+    public class RssItem
     {
         public string Title { get; set; }
         public string Description { get; set; }

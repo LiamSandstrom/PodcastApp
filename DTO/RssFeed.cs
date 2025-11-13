@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace DTO
 {
-    internal class RssFeed
+    public class RssFeed
     {
         public string Title { get; set; }
         public string Description { get; set; }
+        public string ImageUrl { get; set; }
         public List<string> Categories { get; set; }
         public List<RssItem> Items { get; set; }
     }
