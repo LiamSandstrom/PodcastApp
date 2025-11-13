@@ -21,5 +21,13 @@ namespace DAL.MongoDB
             await _collection.InsertOneAsync(entity);
             return entity;
         }
+
+        public async Task<bool> GetByRss(string RssUrl)
+        {
+            var res = await _collection.Find(e => e.RssUrl == RssUrl).FirstOrDefaultAsync();
+            if (res == null) return false;
+            return true;
+
+        }
     }
 }

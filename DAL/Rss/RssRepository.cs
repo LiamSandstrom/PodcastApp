@@ -1,12 +1,13 @@
-﻿using DTO;
+﻿using DAL.Rss.Interfaces;
+using DTO;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.ServiceModel.Syndication;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using System.ServiceModel.Syndication;
-using DAL.Rss.Interfaces;
 
 namespace DAL.Rss
 {
