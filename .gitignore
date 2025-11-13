@@ -75,18 +75,18 @@ BundleArtifacts/
 # Entity Framework
 Migrations/
 
-# Tidsfiler / tillfälliga lås
+# Tidsfiler / tillfï¿½lliga lï¿½s
 *.lock
 *.tmp
 *.temp
 *.bak
 
-# Användarhemligheter
+# Anvï¿½ndarhemligheter
 secrets.json
 appsettings.*.json
 !appsettings.json
 
-# Paketåterställning
+# Paketï¿½terstï¿½llning
 .nuget/
 .nuget/packages/
 
@@ -100,3 +100,5 @@ appsettings.*.json
 
 # Build cache
 msbuild.binlog
+
+**/Properties/launchSettings.json
