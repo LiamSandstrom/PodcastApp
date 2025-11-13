@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.ServiceModel.Syndication;
+using DAL.Rss.Interfaces;
 
 namespace DAL.Rss
 {
@@ -23,13 +24,15 @@ namespace DAL.Rss
             {
                 Title = feed.Title?.Text ?? "",
                 Description = feed.Description?.Text ?? "",
-                ImageUrl = feed.ImageUrl?.ToString() ?? "",
-                Categories = feed.Categories.Select(c => c.Name).ToList(),
+                Authors = SyndicationHelper.GetAuthors(feed),
+                Categories = SyndicationHelper.GetCategories(feed),
+                ImageUrl = SyndicationHelper.GetImageUrl(feed),
+                RssUrl = url,
                 Items = feed.Items.Select(item => new RssItem
                 {
                     Title = item.Title?.Text ?? "",
                     Description = item.Summary?.Text ?? "",
-                    PublishDate = item.PublishDate.DateTime
+                    PublishDate = item.PublishDate.DateTime,
                 }).ToList()
             };
 

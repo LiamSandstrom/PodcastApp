@@ -1,14 +1,13 @@
-﻿using DTO;
+﻿using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL.Rss.Interfaces
+namespace DAL.MongoDB.Interfaces
 {
-    public interface IRssRepository
+    public interface ICategoryRepository : IRepository<Category>
     {
-        public Task<RssFeed> GetFeed(string url);
     }
 }
