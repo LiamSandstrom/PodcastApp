@@ -1,5 +1,4 @@
-﻿
-namespace Models
+﻿namespace Models.Interfaces
 {
     public interface IEntity
     {
