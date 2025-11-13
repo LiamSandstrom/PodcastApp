@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Models
 {
-    internal class Episode
+    public class Episode
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

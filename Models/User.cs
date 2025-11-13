@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Models
 {
-    internal class User
+    public class User
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
