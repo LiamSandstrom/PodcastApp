@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL
+namespace DAL.Rss
 {
     public interface IRssRepository
     {
-        public RssFeed GetFeed(string url);
+        public Task<RssFeed> GetFeed(string url);
     }
 }
