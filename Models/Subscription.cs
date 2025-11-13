@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Models
 {
-    public class Subscription
+    public class Subscription : IEntity
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
