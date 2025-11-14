@@ -33,6 +33,12 @@ static async Task MainAsync()
     sw.Stop();
     Console.WriteLine($"Total: {sw.ElapsedMilliseconds}");
 
+    var UserRepository = new UserRepository(db);
+
+    var user = new User();
+    user.Name = "test";
+    await UserRepository.Add(user);
+
     // To customize application configuration such as set high DPI settings or default font,
     // see https://aka.ms/applicationconfiguration.
 
