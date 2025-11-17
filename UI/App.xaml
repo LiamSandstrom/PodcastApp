@@ -4,6 +4,23 @@
              xmlns:local="clr-namespace:UI"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+
+            <!-- dictionaries -->
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Theme/MenuButtonTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Controls -->
+            <Style TargetType="Control">
+                <Setter Property="Foreground" Value="LightGray"/>
+            </Style>
+
+            <!-- Text/Labels -->
+            <Style TargetType="TextBlock">
+                <Setter Property="Foreground" Value="LightGray"/>
+            </Style>
+
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

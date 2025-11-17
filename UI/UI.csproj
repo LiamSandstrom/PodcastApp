@@ -9,9 +9,17 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Folder Include="Components\" />
-	  <Folder Include="MVVM\View\" />
-	  <Folder Include="MVVM\Model\" />
+		<None Remove="Icons\SearchIcon.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Components\" />
+		<Folder Include="MVVM\View\" />
+		<Folder Include="MVVM\Model\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Resource Include="Icons\SearchIcon.png" />
 	</ItemGroup>
 
 </Project>
