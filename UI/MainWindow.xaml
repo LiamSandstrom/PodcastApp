@@ -3,10 +3,84 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:UI"
+        xmlns:local="clr-namespace:UI" xmlns:viewmodel="clr-namespace:UI.MVVM.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="650" Width="1200"
+        Background="#36394F"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        ResizeMode="CanResizeWithGrip"
+        >
 
+    <Window.DataContext>
+        <viewmodel:MainViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.ColumnSpan="2"
+                Background="#252525"
+                MouseDown="Border_MouseDown"
+                >
+
+            <Grid HorizontalAlignment="Stretch"
+                  VerticalAlignment="Center">
+
+                <Label Content="PoddApp" 
+                       Foreground="#e8e6e6"
+                       FontWeight="SemiBold"
+                       VerticalContentAlignment="center"
+                       />
+
+                <StackPanel HorizontalAlignment="Right"
+                            Orientation="Horizontal"
+                            >
+
+                    <Button Width="20"
+                            Height="20"
+                            Content="🗕"
+                            FontSize="13"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Foreground="#e8e6e6"
+                            Click="ButtonMinimize_Click"
+                            Padding="0,0,0,3"
+                            Margin="0,0,8,0"
+                            />
+
+                    <Button Width="20"
+                            Height="20"
+                            Content="☐"
+                            FontSize="14"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Margin="0,0,8,0"
+                            Foreground="#e8e6e6"
+                            Click="ButtonMaximize_Click"
+                            />
+                    <Button Width="20"
+                            Height="20"
+                            Content="✕"
+                            FontSize="14"
+                            Margin="0,0,8,0"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Foreground="#e8e6e6"
+                            Click="ButtonClose_Click"
+                            />
+
+                </StackPanel>
+
+            </Grid>
+        </Border>
     </Grid>
 </Window>
