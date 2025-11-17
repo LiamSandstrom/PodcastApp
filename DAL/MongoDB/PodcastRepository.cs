@@ -14,20 +14,23 @@ namespace DAL.MongoDB
         public PodcastRepository(IMongoDatabase db)
             : base(db, "Podcast") { }
 
-        public async override Task<Podcast> Add(Podcast entity)
+        public async override Task<Podcast> AddAsync(Podcast entity)
         {
-            var result = await _collection.Find(e => e.RssUrl == entity.RssUrl).FirstOrDefaultAsync();
-            if (result != null) return result;
-            await _collection.InsertOneAsync(entity);
-            return entity;
+            try
+            {
+                await _collection.InsertOneAsync(entity);
+                return entity;
+            }
+            catch (MongoWriteException ex)
+                when (ex.WriteError.Category == ServerErrorCategory.DuplicateKey)
+            {
+                return await _collection.Find(e => e.RssUrl == entity.RssUrl).FirstOrDefaultAsync();
+            }
         }
 
-        public async Task<bool> GetByRss(string RssUrl)
+        public async Task<bool> ExistsByRssAsync(string rssUrl)
         {
-            var res = await _collection.Find(e => e.RssUrl == RssUrl).FirstOrDefaultAsync();
-            if (res == null) return false;
-            return true;
-
+            return await _collection.Find(e => e.RssUrl == rssUrl).AnyAsync();
         }
     }
 }

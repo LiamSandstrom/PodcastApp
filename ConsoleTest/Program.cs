@@ -37,7 +37,9 @@ static async Task MainAsync()
 
     var user = new User();
     user.Name = "test";
-    await UserRepository.Add(user);
+    user.Email = "test@gg.com";
+    var usr = await UserRepository.AddAsync(user);
+    Console.WriteLine(usr.Id);
 
     // To customize application configuration such as set high DPI settings or default font,
     // see https://aka.ms/applicationconfiguration.
@@ -48,7 +50,7 @@ static async Task TestPodcast(IMongoDatabase db, IPodcastRepository podcastRepo)
 {
     string rssUrl = "https://api.sr.se/api/rss/pod/itunes/3966";
 
-    if (await podcastRepo.GetByRss(rssUrl)) return;
+    if (await podcastRepo.ExistsByRssAsync(rssUrl)) return;
 
     IRssRepository repo = new RssRepository();
 
@@ -65,5 +67,5 @@ static async Task TestPodcast(IMongoDatabase db, IPodcastRepository podcastRepo)
     };
 
 
-    var res = await podcastRepo.Add(podcast);
+    var res = await podcastRepo.AddAsync(podcast);
 }

@@ -15,5 +15,19 @@ namespace DAL.MongoDB
             : base(db, "Users")
         {
         }
+
+        public async override Task<User> AddAsync(User entity)
+        {
+            try
+            {
+                await _collection.InsertOneAsync(entity);
+                return entity;
+            }
+            catch (MongoWriteException ex)
+                when (ex.WriteError.Category == ServerErrorCategory.DuplicateKey)
+            {
+                return await _collection.Find(e => e.Email == entity.Email).FirstOrDefaultAsync();
+            }
+        }
     }
 }

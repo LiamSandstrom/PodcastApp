@@ -8,13 +8,13 @@ namespace DAL.MongoDB.Interfaces
 {
     public interface IRepository<T>
     {
-        Task<T> Add(T entity);
+        Task<T> AddAsync(T entity);
 
-        Task<T?> GetById(string id);
-        Task<IEnumerable<T>> GetAll();
+        Task<T?> GetByIdAsync(string id);
+        Task<IEnumerable<T>> GetAllAsync();
 
-        Task<bool> Update(T entity);
+        Task<bool> UpdateAsync(T entity);
 
-        Task<bool> Delete(string id);
+        Task<bool> DeleteAsync(string id);
     }
 }
