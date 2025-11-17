@@ -9,9 +9,6 @@ namespace Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
-
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string PodcastId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime PublishTime { get; set; }

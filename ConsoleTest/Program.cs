@@ -24,48 +24,6 @@ static async Task MainAsync()
 
     sw.Stop();
     Console.WriteLine($"Handshake + connection: {sw.ElapsedMilliseconds}");
-    sw = Stopwatch.StartNew();
-
-    var podcastRepo = new PodcastRepository(db);
-
-    await TestPodcast(db, podcastRepo);
-
-    sw.Stop();
-    Console.WriteLine($"Total: {sw.ElapsedMilliseconds}");
-
-    var UserRepository = new UserRepository(db);
-
-    var user = new User();
-    user.Name = "test";
-    user.Email = "test@gg.com";
-    var usr = await UserRepository.AddAsync(user);
-    Console.WriteLine(usr.Id);
-
-    // To customize application configuration such as set high DPI settings or default font,
-    // see https://aka.ms/applicationconfiguration.
-
 }
 
-static async Task TestPodcast(IMongoDatabase db, IPodcastRepository podcastRepo)
-{
-    string rssUrl = "https://api.sr.se/api/rss/pod/itunes/3966";
 
-    if (await podcastRepo.ExistsByRssAsync(rssUrl)) return;
-
-    IRssRepository repo = new RssRepository();
-
-    var feed = await repo.GetFeed(rssUrl);
-    var podcast = new Podcast
-    {
-        Title = feed.Title,
-        Description = feed.Description,
-        Categories = feed.Categories,
-        ImageUrl = feed.ImageUrl,
-        RssUrl = feed.RssUrl,
-        CreatedAt = DateTime.UtcNow,
-        Authors = feed.Authors,
-    };
-
-
-    var res = await podcastRepo.AddAsync(podcast);
-}
