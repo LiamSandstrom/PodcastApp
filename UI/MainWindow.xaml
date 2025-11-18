@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:UI" xmlns:viewmodel="clr-namespace:UI.MVVM.ViewModel"
+        xmlns:local="clr-namespace:UI" xmlns:viewModel="clr-namespace:UI.MVVM.ViewModel"
         mc:Ignorable="d"
         Title="MainWindow" Height="720" Width="1280"
         MinHeight="578" MinWidth="1024"
@@ -20,7 +20,7 @@
     </WindowChrome.WindowChrome>
 
     <Window.DataContext>
-        <viewmodel:MainViewModel/>
+        <viewModel:MainViewModel/>
     </Window.DataContext>
 
     <Border 
@@ -37,6 +37,8 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
+
+            <!-- Top control -->
             <Border Grid.ColumnSpan="2"
                 Background="#252525"
                 MouseDown="Border_MouseDown"
@@ -92,6 +94,7 @@
                 </Grid>
             </Border>
 
+            <!-- Side bar -->
             <Grid Grid.Row="1"
                 Grid.RowSpan="2"
                 Background="#2e3036">
@@ -100,20 +103,28 @@
                     <RadioButton Content="Home"
                          Height="45"
                          FontSize="15"
-                         Style="{StaticResource MenuButtonTheme}"/>
+                         Style="{StaticResource MenuButtonTheme}"
+                         IsChecked="True"
+                         Command="{Binding HomeViewCommand}"
+                                 />
 
                     <RadioButton Content="Categories"
                          Height="45"
                          FontSize="15"
-                         Style="{StaticResource MenuButtonTheme}"/>
+                         Style="{StaticResource MenuButtonTheme}"
+                         Command="{Binding CategoriesViewCommand}"
+                                 />
 
                     <RadioButton Content="Subscriptions"
                          Height="45"
                          FontSize="15"
-                         Style="{StaticResource MenuButtonTheme}"/>
+                         Style="{StaticResource MenuButtonTheme}"
+                         Command="{Binding SubscriptionViewCommand}"
+                                 />
                 </StackPanel>
             </Grid>
 
+            <!-- Search bar -->
             <Border    Grid.Row="1"
                        Grid.Column="1"
                        Width="450"
@@ -160,7 +171,12 @@
                 </Border>
             </Border>
 
-
+            <!-- Content window -->
+            <ContentControl Grid.Row="2"
+                            Grid.Column="1"
+                            Margin="10"
+                            Content="{Binding CurrentView}"
+                            />
         </Grid>
     </Border>
 </Window>
