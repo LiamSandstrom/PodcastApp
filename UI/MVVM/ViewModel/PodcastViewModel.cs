@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BL.DTOmodels;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -6,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using UI.Core;
-using UI.MVVM.Model;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UI.MVVM.ViewModel
@@ -23,36 +23,39 @@ namespace UI.MVVM.ViewModel
                 OnPropertyChanged();
             }
         }
-        public ObservableCollection<Episode> Episodes { get; set; } = new();
+        public ObservableCollection<DTOepisode> Episodes { get; set; } = new();
         public ObservableCollection<string> Categories { get; set; } = new();
 
-        public PodcastViewModel()
+        public readonly MainViewModel MVM;
+        public PodcastViewModel(MainViewModel MVM)
         {
-            Title = "Test Podcast";
-            Categories.Add("History");
-            Categories.Add("News");
-            Categories.Add("Gaming");
-            AsyncStuff();
+            this.MVM = MVM;
         }
-        public async void AsyncStuff()
-        {
-            await AddEpisodes(10, 2000);
 
-        }
-        public async Task AddEpisodes(int amount, int delay)
+        public void SetPodcast(DTOpodcast podcast)
         {
-            await Task.Delay(delay);
-            for (int i = amount; i > 0; i--)
+            Title = podcast.Title;
+
+            Episodes.Clear();
+            int i = 0;
+            int max = 20;
+            foreach (var ep in podcast.Episodes)
             {
-                Episodes.Add(new Episode
-                {
-                    Title = "#" + i + " - " + "Episode",
-                    Description = "Test description. Here is text that text is text which can be text.",
-                    EpisodeNumber = i,
-                    DateAndDuration = "19 nov - 1h 48min"
-                });
+                if (i > max) break;
+                if (ep.Description == "") ep.Description = "Episode has no description...";
+                Episodes.Add(ep);
+                i++;
+            }
+
+            i = 0;
+            Categories.Clear();
+            foreach (var catg in podcast.Categories)
+            {
+                if (i > max) break;
+                Categories.Add(catg);
+                i++;
             }
         }
-    }
 
+    }
 }

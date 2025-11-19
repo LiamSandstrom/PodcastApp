@@ -11,6 +11,7 @@
 	<ItemGroup>
 		<None Remove="Icons\BookmarkAdd.png" />
 		<None Remove="Icons\BookmarkAdded.png" />
+		<None Remove="Icons\Edit.png" />
 		<None Remove="Icons\LikeAdd.png" />
 		<None Remove="Icons\Liked.png" />
 		<None Remove="Icons\SearchIcon.png" />
@@ -21,8 +22,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\BL\BL.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Resource Include="Icons\BookmarkAdd.png" />
 		<Resource Include="Icons\BookmarkAdded.png" />
+		<Resource Include="Icons\Edit.png" />
 		<Resource Include="Icons\LikeAdd.png" />
 		<Resource Include="Icons\Liked.png" />
 		<Resource Include="Icons\SearchIcon.png" />

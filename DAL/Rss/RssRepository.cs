@@ -1,11 +1,13 @@
 ﻿using DAL.Rss.Interfaces;
 using DTO;
+using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -24,7 +26,7 @@ namespace DAL.Rss
             var feedDto = new RssFeed
             {
                 Title = feed.Title?.Text ?? "",
-                Description = feed.Description?.Text ?? "",
+                Description = feed.Description.Text ?? "",
                 Authors = SyndicationHelper.GetAuthors(feed),
                 Categories = SyndicationHelper.GetCategories(feed),
                 ImageUrl = SyndicationHelper.GetImageUrl(feed),
@@ -32,12 +34,22 @@ namespace DAL.Rss
                 Items = feed.Items.Select(item => new RssItem
                 {
                     Title = item.Title?.Text ?? "",
-                    Description = item.Summary?.Text ?? "",
+                    Description = ExtractPlainText(item.Summary?.Text ?? ""),
                     PublishDate = item.PublishDate.DateTime,
                 }).ToList()
             };
 
             return feedDto;
+        }
+        public static string ExtractPlainText(string html)
+        {
+            if (string.IsNullOrWhiteSpace(html))
+                return "";
+
+            var doc = new HtmlDocument();
+            doc.LoadHtml(html);
+
+            return doc.DocumentNode.InnerText.Trim();
         }
     }
 }

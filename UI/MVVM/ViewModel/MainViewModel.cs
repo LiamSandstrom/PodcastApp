@@ -1,10 +1,16 @@
-﻿using System;
+﻿using BL.Interfaces;
+using DAL.MongoDB.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using UI.Core;
+using BL;
+using DAL.Rss;
+using System.Windows.Controls;
 
 namespace UI.MVVM.ViewModel
 {
@@ -22,6 +28,20 @@ namespace UI.MVVM.ViewModel
         public RelayCommand CategoriesViewCommand { get; }
         public RelayCommand SubscriptionViewCommand { get; }
         public RelayCommand PodcastViewCommand { get; }
+        public RelayCommand SearchCommand { get; }
+
+        public event Action RequestScrollToTop;
+
+        private string _searchText;
+        public string SearchText
+        {
+            get { return _searchText; }
+            set
+            {
+                _searchText = value;
+                OnPropertyChanged();
+            }
+        }
 
         public object CurrentView
         {
@@ -32,12 +52,18 @@ namespace UI.MVVM.ViewModel
                 OnPropertyChanged();
             }
         }
+
+
+        private readonly IPodcastService _podcastService;
+
         public MainViewModel()
         {
+
+            _podcastService = new PodcastService(new RssRepository());
             HomeVM = new HomeViewModel();
             CategoriesVM = new CategoriesViewModel();
             SubscriptionVM = new SubscriptionViewModel();
-            PodcastVM = new PodcastViewModel();
+            PodcastVM = new PodcastViewModel(this);
             CurrentView = HomeVM;
 
             HomeViewCommand = new RelayCommand(o =>
@@ -58,6 +84,17 @@ namespace UI.MVVM.ViewModel
             PodcastViewCommand = new RelayCommand(o =>
             {
                 CurrentView = PodcastVM;
+            });
+
+
+            SearchCommand = new RelayCommand(async o =>
+            {
+                var res = await _podcastService.GetPodcastFromRssAsync(SearchText);
+                if (res == null) return;
+
+                PodcastVM.SetPodcast(res);
+                PodcastViewCommand.Execute(this);
+                RequestScrollToTop?.Invoke();
             });
         }
 

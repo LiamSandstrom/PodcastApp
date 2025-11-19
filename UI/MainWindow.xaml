@@ -150,11 +150,12 @@
                                Foreground="White"
                                Background="#252525"
                                FontSize="14"
+                                Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                             />
 
                     <Button Grid.Column="1"
                                     Background="Transparent"
-                                    Command="{Binding PodcastViewCommand}"
+                                    Command="{Binding SearchCommand}"
                                     BorderThickness="0"
                                     Style="{StaticResource ModernButton}"
                             Width="33"
