@@ -6,12 +6,14 @@
              xmlns:local="clr-namespace:UI.MVVM.View" xmlns:viewmodel="clr-namespace:UI.MVVM.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:PodcastViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             FontSize="20"
+             FontSize="16"
              >
 
     <ScrollViewer 
                       VerticalScrollBarVisibility="Auto"
-                      Padding="0,0,30,0">
+                      Padding="0,0,30,0"
+                      MaxWidth="1300"
+        >
 
         <Grid Margin="0"
           >
@@ -47,14 +49,18 @@
                           Grid.Row="0"
                           Grid.Column="1"
                    VerticalAlignment="Bottom"
-                   Margin="20,0,0,20"
+                   Margin="20,0,0,0"
                         >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="30"/>
-                            <ColumnDefinition Width="50"/>
-                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="40"/>
                         </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
 
                         <TextBlock Text="{Binding Title}"
                                    Grid.Column="0"
@@ -75,6 +81,39 @@
                                Height="26"
                                VerticalAlignment="Bottom"
                                />
+
+                        <ItemsControl Grid.Row="1"
+                                      Grid.ColumnSpan="4"
+                                      ItemsSource="{Binding Categories}"
+                                      SnapsToDevicePixels="True"
+
+                                      >
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border CornerRadius="12"
+                                            Padding="10, 5"
+                                            BorderBrush="Gray"
+                                            BorderThickness="1"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Center"
+                                            Margin="5,0,0,0"
+                                        >
+                                        <TextBlock Text="{Binding}"
+                                                   TextAlignment="Center"
+                                                   FontSize="12"
+                                                   />
+
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+
+                        </ItemsControl>
                     </Grid>
                 </Grid>
             </Border>
@@ -87,10 +126,11 @@
                     >
 
                 <ItemsControl ItemsSource="{Binding Episodes}"
+                              SnapsToDevicePixels="True"
                           >
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border BorderBrush="White"
+                            <Border BorderBrush="#70f1f1f1"
                             BorderThickness="0,0,0,1"
                             Padding="20"
                             Margin="0,0,0,10"
@@ -102,12 +142,25 @@
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
 
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+
                                     <TextBlock Grid.Row="0" Text="{Binding Title}"
                                                Foreground="White"
-                                               FontWeight="SemiBold"/>
+                                               FontWeight="SemiBold"
+                                               FontSize="18"
+                                               />
                                     <TextBlock Grid.Row="1" Text="{Binding Description}"
                                                FontWeight="Light"
                                                FontSize="16"/>
+                                    <TextBlock Grid.Row="2" Text="{Binding DateAndDuration}"
+                                               FontWeight="Normal"
+                                               Foreground="White"
+                                               FontSize="16"
+                                               Margin="0,10,0,0"
+                                               />
 
                                 </Grid>
                             </Border>

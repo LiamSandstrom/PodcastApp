@@ -11,9 +11,7 @@ namespace UI.MVVM.Model
         public string Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public DateTime PublishTime { get; set; }
         public int EpisodeNumber { get; set; }
-        public string Duration { get; set; }
-
+        public string DateAndDuration { get; set; }
     }
 }

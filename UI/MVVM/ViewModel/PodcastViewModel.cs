@@ -4,8 +4,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using UI.Core;
 using UI.MVVM.Model;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UI.MVVM.ViewModel
 {
@@ -22,6 +24,7 @@ namespace UI.MVVM.ViewModel
             }
         }
         public ObservableCollection<Episode> Episodes { get; set; } = new();
+        public ObservableCollection<string> Categories { get; set; } = new();
 
         public PodcastViewModel()
         {
@@ -30,11 +33,16 @@ namespace UI.MVVM.ViewModel
             {
                 Episodes.Add(new Episode
                 {
-                    Title = "#" + i + "-" + "Episode",
+                    Title = "#" + i + " - " + "Episode",
                     Description = "Test description. Here is text that text is text which can be text.",
                     EpisodeNumber = i,
+                    DateAndDuration = "19 nov - 1h 48min"
                 });
             }
+
+            Categories.Add("History");
+            Categories.Add("News");
+            Categories.Add("Gaming");
         }
     }
 }
