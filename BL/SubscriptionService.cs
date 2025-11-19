@@ -20,60 +20,80 @@ namespace BL
             subscriptionRepo = subRepo;
             podcastRepo = podRepo;
         }
-       public async Task<bool> SubscribeAsync(string userId, string podcastId)
+        public async Task<bool> SubscribeAsync(string userId, string podcastId)
         {
-            
-            var podcast = await podcastRepo.GetByIdAsync(podcastId);
-            if (podcast == null)
-                return false;
-
-            
-            var existing = await subscriptionRepo.GetSubscriptionAsync(userId, podcastId);
-            if (existing != null)
-                return false;
-
-            
-            var sub = new Subscription
+            try
             {
-                UserId = userId,
-                PodcastId = podcastId,
-                CustomName = podcast.Title,
-                SubscribedAt = DateTime.Now
-            };
+                var podcast = await podcastRepo.GetByIdAsync(podcastId);
+                if (podcast == null)
+                    return false;
 
-            await subscriptionRepo.AddAsync(sub);
-            return true;
+
+                var existing = await subscriptionRepo.GetSubscriptionAsync(userId, podcastId);
+                if (existing != null)
+                    return false;
+
+
+                var sub = new Subscription
+                {
+                    UserId = userId,
+                    PodcastId = podcastId,
+                    CustomName = podcast.Title,
+                    SubscribedAt = DateTime.Now
+                };
+
+                await subscriptionRepo.AddAsync(sub);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
-       public async Task<bool> UnsubscribeAsync(string userId, string podcastId)
+        public async Task<bool> UnsubscribeAsync(string userId, string podcastId)
         {
-            var existing = await subscriptionRepo.GetSubscriptionAsync(userId, podcastId);
-            if (existing == null)
-                return false; 
+            try
+            {
+                var existing = await subscriptionRepo.GetSubscriptionAsync(userId, podcastId);
+                if (existing == null)
+                    return false;
 
-            return await subscriptionRepo.DeleteAsync(existing.Id);
+                return await subscriptionRepo.DeleteAsync(existing.Id);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
         public async Task<List<DTOsubscription>> GetUserSubscriptionsAsync(string userId)
         {
-            var subs = await subscriptionRepo.GetByUserIdAsync(userId);
-            var result = new List<DTOsubscription>();
-
-            foreach (var sub in subs)
+            try
             {
-                var podcast = await podcastRepo.GetByIdAsync(sub.PodcastId);
+                var subs = await subscriptionRepo.GetByUserIdAsync(userId);
+                var result = new List<DTOsubscription>();
 
-                result.Add(new DTOsubscription
+                foreach (var sub in subs)
                 {
-                    SubscriptionId = sub.Id,
-                    UserId = sub.UserId,
-                    PodcastId = sub.PodcastId,
-                    CustomName = sub.CustomName,
-                    PodcastTitle = podcast?.Title ?? "(deleted)",
-                    SubscribedAt = sub.SubscribedAt
-                });
+                    var podcast = await podcastRepo.GetByIdAsync(sub.PodcastId);
+
+                    result.Add(new DTOsubscription
+                    {
+                        SubscriptionId = sub.Id,
+                        UserId = sub.UserId,
+                        PodcastId = sub.PodcastId,
+                        CustomName = sub.CustomName,
+                        PodcastTitle = podcast?.Title ?? "(deleted)",
+                        SubscribedAt = sub.SubscribedAt
+                    });
+                }
+
+                return result;
             }
+            catch (Exception ex)
+            {
+                return new List<DTOsubscription>();
 
-            return result;
-
+            }
         }
     }
 }
