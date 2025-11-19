@@ -18,6 +18,9 @@ namespace BL.DTOmodels
         public string RssUrl { get; set; }
 
         public required List<DTOepisode> Episodes { get; set; } = new();
+      
+        public List<DTOepisode> AllEpisodes { get; set; } = new();  
+        public int CurrentIndex { get; set; }
 
     }
 }

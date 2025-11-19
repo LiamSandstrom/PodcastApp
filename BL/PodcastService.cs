@@ -22,21 +22,24 @@ namespace BL
             rssRepo = rssRepository;
         }
 
-        public async Task<DTOpodcast> GetPodcastFromRssAsync(string rssUrl)
+        public async Task<DTOpodcast> GetPodcastFromRssAsync(string rssUrl, int amountOfEpisodes)
         {
             try
             {
 
                 var feed = await rssRepo.GetFeed(rssUrl);
 
-                var episodes = feed.Items.Select(item => new DTOepisode
+                var allEpisodes = feed.Items.Select(item => new DTOepisode
                 {
                     Title = item.Title,
                     Description = item.Description,
                     EpisodeNumber = item.EpisodeNumber,
                     DateAndDuration = FormatDateAndDuration(item.PublishDate, item.Duration),
+                    
 
                 }).ToList();
+
+                var limitedEpisodes = allEpisodes.Take(amountOfEpisodes).ToList();
 
                 var dtoPodd = new DTOpodcast
                 {
@@ -46,7 +49,9 @@ namespace BL
                     Categories = feed.Categories,
                     ImageUrl = feed.ImageUrl,
                     RssUrl = feed.RssUrl,
-                    Episodes = episodes,
+                    AllEpisodes = allEpisodes,
+                    Episodes = limitedEpisodes,   
+                    CurrentIndex = limitedEpisodes.Count 
                 };
 
 
@@ -61,6 +66,30 @@ namespace BL
 
 
 
+        }
+
+        public List<DTOepisode> GetNextEpisodes(DTOpodcast dto, int amountOfEpisodes)
+        {
+            try
+            {
+                if (dto.CurrentIndex >= dto.AllEpisodes.Count)
+                {
+                    return new List<DTOepisode>();
+                }
+                var next = dto.AllEpisodes
+                .Skip(dto.CurrentIndex)
+                .Take(amountOfEpisodes)
+                .ToList();
+
+                dto.CurrentIndex += next.Count;
+                dto.Episodes.AddRange(next);
+
+                return next;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
         public static string FormatDateAndDuration(DateTime publishDate, string durationString)
         {

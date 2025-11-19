@@ -9,6 +9,8 @@ namespace BL.Interfaces
 {
     public interface IPodcastService : IService
     {
-        Task<DTOpodcast> GetPodcastFromRssAsync(string rssUrl);
+        Task<DTOpodcast> GetPodcastFromRssAsync(string rssUrl, int amountOfEpisodes);
+
+        public List<DTOepisode> GetNextEpisodes(DTOpodcast dto, int amountOfEpisodes);
     }
 }

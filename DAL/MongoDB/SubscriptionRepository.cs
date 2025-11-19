@@ -46,6 +46,20 @@ namespace DAL.MongoDB
                 .FirstOrDefaultAsync();
             }
         }
+        public async Task<Subscription?> GetSubscriptionAsync(string userId, string podcastId)
+        {
+            return await _collection
+                .Find(s => s.UserId == userId && s.PodcastId == podcastId)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<Subscription>> GetByUserIdAsync(string userId)
+        {
+            return await _collection
+                .Find(s => s.UserId == userId)
+                .ToListAsync();
+        }
+
     }
 }
 
