@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 using BL.DTOmodels;
@@ -20,7 +21,7 @@ namespace BL
             subscriptionRepo = subRepo;
             podcastRepo = podRepo;
         }
-        public async Task<bool> SubscribeAsync(string userId, string podcastId)
+        public async Task<bool> SubscribeAsync(string userId, string podcastId, string customName)
         {
             try
             {
@@ -38,7 +39,7 @@ namespace BL
                 {
                     UserId = userId,
                     PodcastId = podcastId,
-                    CustomName = podcast.Title,
+                    CustomName = string.IsNullOrWhiteSpace(customName) ? podcast.Title : customName,
                     SubscribedAt = DateTime.Now
                 };
 
@@ -93,6 +94,24 @@ namespace BL
             {
                 return new List<DTOsubscription>();
 
+            }
+        }
+
+        public async Task<bool> RenameSubscriptionAsync(string userId, string podcastId, string newName)
+        {
+            try
+            {
+                var sub = await subscriptionRepo.GetSubscriptionAsync(userId, podcastId);
+                if (sub == null)
+                    return false;
+
+                sub.CustomName = newName;
+                return await subscriptionRepo.UpdateAsync(sub);
+
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
     }
