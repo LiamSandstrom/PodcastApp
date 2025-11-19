@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="720" Width="1280"
         MinHeight="578" MinWidth="1024"
-        Background="#373940"
+        Background="#131313"
         WindowStyle="None"
         AllowsTransparency="True"
         >
@@ -97,27 +97,27 @@
             <!-- Side bar -->
             <Grid Grid.Row="1"
                 Grid.RowSpan="2"
-                Background="#2e3036">
+                Background="#0F0F0F">
 
                 <StackPanel>
                     <RadioButton Content="Home"
-                         Height="45"
-                         FontSize="15"
+                         Height="50"
+                         FontSize="17"
                          Style="{StaticResource MenuButtonTheme}"
                          IsChecked="True"
                          Command="{Binding HomeViewCommand}"
                                  />
 
                     <RadioButton Content="Categories"
-                         Height="45"
-                         FontSize="15"
+                         Height="50"
+                         FontSize="17"
                          Style="{StaticResource MenuButtonTheme}"
                          Command="{Binding CategoriesViewCommand}"
                                  />
 
                     <RadioButton Content="Subscriptions"
-                         Height="45"
-                         FontSize="15"
+                         Height="50"
+                         FontSize="17"
                          Style="{StaticResource MenuButtonTheme}"
                          Command="{Binding SubscriptionViewCommand}"
                                  />
@@ -128,47 +128,46 @@
             <Border    Grid.Row="1"
                        Grid.Column="1"
                        Width="450"
-                       Height="40"
+                       Height="38"
                        HorizontalAlignment="Stretch"
                        CornerRadius="15"
                        BorderThickness="1.5"
                        BorderBrush="#9a9a9a"
+                        Background="#252525"
+                        Padding="12,0,0,0"
                        >
-                <Border>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"
+                <Grid 
+                          >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"
                                           />
-                            <ColumnDefinition Width="45"/>
-                        </Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="45"/>
+                    </Grid.ColumnDefinitions>
 
-                        <TextBox Grid.Row="0"  
+                    <TextBox Grid.Row="0"  
                     VerticalContentAlignment="center"
                                 BorderThickness="0"
                                Foreground="White"
                                Background="#252525"
-                               Padding="12,0,10,0"
                                FontSize="14"
                             />
-                        <Border Grid.Column="1"
-                            Background="#5a66f2"
-                                >
 
-                            <Image Source="/Icons/SearchIcon.png"
+                    <Button Grid.Column="1"
+                                    Background="Transparent"
+                                    Command="{Binding PodcastViewCommand}"
+                                    BorderThickness="0"
+                                    Style="{StaticResource ModernButton}"
+                            Width="33"
+                                    >
+                        <Image Source="/Icons/SearchIcon.png"
                         Height="27"
                         Width="27"
-                            
                         />
-                        </Border>
+                    </Button>
 
 
-                    </Grid>
-                    <Border.Clip>
-                        <RectangleGeometry RadiusX="16" RadiusY="20"
-                                       Rect="-1,-1,449,39"/>
-                    </Border.Clip>
+                </Grid>
 
-                </Border>
             </Border>
 
             <!-- Content window -->

@@ -14,12 +14,14 @@ namespace UI.MVVM.ViewModel
         public HomeViewModel HomeVM { get; set; }
         public CategoriesViewModel CategoriesVM { get; set; }
         public SubscriptionViewModel SubscriptionVM { get; set; }
+        public PodcastViewModel PodcastVM { get; set; }
 
         private object _currentView;
 
         public RelayCommand HomeViewCommand { get; }
         public RelayCommand CategoriesViewCommand { get; }
         public RelayCommand SubscriptionViewCommand { get; }
+        public RelayCommand PodcastViewCommand { get; }
 
         public object CurrentView
         {
@@ -35,6 +37,7 @@ namespace UI.MVVM.ViewModel
             HomeVM = new HomeViewModel();
             CategoriesVM = new CategoriesViewModel();
             SubscriptionVM = new SubscriptionViewModel();
+            PodcastVM = new PodcastViewModel();
             CurrentView = HomeVM;
 
             HomeViewCommand = new RelayCommand(o =>
@@ -50,6 +53,11 @@ namespace UI.MVVM.ViewModel
             SubscriptionViewCommand = new RelayCommand(o =>
             {
                 CurrentView = SubscriptionVM;
+            });
+
+            PodcastViewCommand = new RelayCommand(o =>
+            {
+                CurrentView = PodcastVM;
             });
         }
 

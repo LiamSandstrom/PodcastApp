@@ -11,6 +11,7 @@
             <!-- dictionaries -->
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Theme/MenuButtonTheme.xaml"/>
+                <ResourceDictionary Source="/Theme/CleanButton.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
@@ -23,6 +24,10 @@
 
             <DataTemplate DataType="{x:Type viewModel:SubscriptionViewModel}">
                 <view:SubscriptionView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:PodcastViewModel}">
+                <view:PodcastView/>
             </DataTemplate>
 
 
