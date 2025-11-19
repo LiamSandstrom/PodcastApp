@@ -33,6 +33,7 @@ namespace UI.MVVM.ViewModel
         public event Action RequestScrollToTop;
 
         private string _searchText;
+        private string _lastSearched = "";
         public string SearchText
         {
             get { return _searchText; }
@@ -89,9 +90,16 @@ namespace UI.MVVM.ViewModel
 
             SearchCommand = new RelayCommand(async o =>
             {
+                if (SearchText.Equals(_lastSearched))
+                {
+                    RequestScrollToTop?.Invoke();
+                    return;
+
+                }
                 var res = await _podcastService.GetPodcastFromRssAsync(SearchText);
                 if (res == null) return;
 
+                _lastSearched = SearchText;
                 PodcastVM.SetPodcast(res);
                 PodcastViewCommand.Execute(this);
                 RequestScrollToTop?.Invoke();
