@@ -157,7 +157,6 @@
                                     Command="{Binding PodcastViewCommand}"
                                     BorderThickness="0"
                                     Style="{StaticResource ModernButton}"
-                            Padding="0"
                             Width="33"
                                     >
                         <Image Source="/Icons/SearchIcon.png"

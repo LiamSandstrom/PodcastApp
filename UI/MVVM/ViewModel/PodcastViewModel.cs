@@ -29,7 +29,20 @@ namespace UI.MVVM.ViewModel
         public PodcastViewModel()
         {
             Title = "Test Podcast";
-            for (int i = 10; i > 0; i--)
+            Categories.Add("History");
+            Categories.Add("News");
+            Categories.Add("Gaming");
+            AsyncStuff();
+        }
+        public async void AsyncStuff()
+        {
+            await AddEpisodes(10, 2000);
+
+        }
+        public async Task AddEpisodes(int amount, int delay)
+        {
+            await Task.Delay(delay);
+            for (int i = amount; i > 0; i--)
             {
                 Episodes.Add(new Episode
                 {
@@ -39,10 +52,7 @@ namespace UI.MVVM.ViewModel
                     DateAndDuration = "19 nov - 1h 48min"
                 });
             }
-
-            Categories.Add("History");
-            Categories.Add("News");
-            Categories.Add("Gaming");
         }
     }
+
 }
