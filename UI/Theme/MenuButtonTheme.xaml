@@ -18,7 +18,7 @@
                                        VerticalAlignment="Center"
                                        Margin="20,0,0,0"
                                        Foreground="{TemplateBinding Foreground}"
-                                       FontWeight="Normal"
+                                       FontWeight="SemiBold"
                                        />
                         </Grid>
                     </Border>
@@ -29,11 +29,12 @@
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="Foreground" Value="LightGray"/>
+        <Setter Property="Cursor" Value="Hand"/>
 
         <Style.Triggers>
             <Trigger Property="IsChecked" Value="True">
-                <Setter Property="BorderBrush" Value="White"/>
-                <Setter Property="Background" Value="#5a66f2"/>
+                <Setter Property="BorderBrush" Value="#1DB954"/>
+                <Setter Property="Background" Value="#1f1f1f"/>
 
                 <Setter Property="Foreground" Value="White"/>
 

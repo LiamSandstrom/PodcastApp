@@ -1,0 +1,120 @@
+﻿<UserControl x:Class="UI.MVVM.View.PodcastView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UI.MVVM.View" xmlns:viewmodel="clr-namespace:UI.MVVM.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:PodcastViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             FontSize="20"
+             >
+
+    <ScrollViewer 
+                      VerticalScrollBarVisibility="Auto"
+                      Padding="0,0,30,0">
+
+        <Grid Margin="0"
+          >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="280"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Margin="0,0,0,20"
+                    Background="#1f1f1f"
+                    Padding="30"
+                    CornerRadius="30"
+                    >
+
+                <Grid 
+                >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="220" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0"
+                Grid.Row="0"
+                Background="Beige"
+                            CornerRadius="10"
+               />
+
+                    <Grid
+                          Grid.Row="0"
+                          Grid.Column="1"
+                   VerticalAlignment="Bottom"
+                   Margin="20,0,0,20"
+                        >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="{Binding Title}"
+                                   Grid.Column="0"
+                   FontSize="50"
+                   FontWeight="Bold"
+                   Foreground="White"
+                   />
+
+                        <Image Grid.Column="2"
+                               Source="/Icons/LikeAdd.png"
+                               Width="26"
+                               Height="26"
+                               VerticalAlignment="Bottom"
+                               />
+                        <Image Grid.Column="3"
+                               Source="/Icons/BookmarkAdd.png"
+                               Width="26"
+                               Height="26"
+                               VerticalAlignment="Bottom"
+                               />
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="1"
+                    Grid.Column="2"
+                    CornerRadius="15"
+                    Padding="20"
+                    Background="#181818"
+                    >
+
+                <ItemsControl ItemsSource="{Binding Episodes}"
+                          >
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="White"
+                            BorderThickness="0,0,0,1"
+                            Padding="20"
+                            Margin="0,0,0,10"
+                            >
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Text="{Binding Title}"
+                                               Foreground="White"
+                                               FontWeight="SemiBold"/>
+                                    <TextBlock Grid.Row="1" Text="{Binding Description}"
+                                               FontWeight="Light"
+                                               FontSize="16"/>
+
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</UserControl>
