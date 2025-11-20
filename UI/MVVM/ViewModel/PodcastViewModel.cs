@@ -11,7 +11,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UI.MVVM.ViewModel
 {
-    class PodcastViewModel : ObservableObject
+    public class PodcastViewModel : ObservableObject
     {
         private string _rssUrl = "";
 

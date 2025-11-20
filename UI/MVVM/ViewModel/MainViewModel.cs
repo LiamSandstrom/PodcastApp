@@ -11,12 +11,14 @@ using UI.Core;
 using BL;
 using DAL.Rss;
 using System.Windows.Controls;
+using System.Windows;
 
 namespace UI.MVVM.ViewModel
 {
 
-    class MainViewModel : ObservableObject
+    public class MainViewModel : ObservableObject
     {
+        private string _email;
         public HomeViewModel HomeVM { get; set; }
         public CategoriesViewModel CategoriesVM { get; set; }
         public SubscriptionViewModel SubscriptionVM { get; set; }
@@ -58,8 +60,10 @@ namespace UI.MVVM.ViewModel
 
         public readonly IPodcastService podcastService;
 
-        public MainViewModel()
+        public MainViewModel(string email)
         {
+            _email = email;
+            MessageBox.Show("logged in as " + _email);
 
             podcastService = new PodcastService(new RssRepository());
             HomeVM = new HomeViewModel();
@@ -107,6 +111,7 @@ namespace UI.MVVM.ViewModel
                 PodcastViewCommand.Execute(this);
                 RequestScrollToTop?.Invoke();
             });
+            _email = email;
         }
 
     }

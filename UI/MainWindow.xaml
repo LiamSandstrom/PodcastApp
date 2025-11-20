@@ -10,6 +10,7 @@
         Background="#131313"
         WindowStyle="None"
         AllowsTransparency="True"
+        WindowStartupLocation="CenterScreen"
         >
 
     <WindowChrome.WindowChrome>
@@ -19,9 +20,6 @@
                       GlassFrameThickness="0"/>
     </WindowChrome.WindowChrome>
 
-    <Window.DataContext>
-        <viewModel:MainViewModel/>
-    </Window.DataContext>
 
     <Border 
             >

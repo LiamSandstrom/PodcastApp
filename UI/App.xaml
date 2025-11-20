@@ -4,7 +4,8 @@
              xmlns:viewModel="clr-namespace:UI.MVVM.ViewModel"
              xmlns:view="clr-namespace:UI.MVVM.View"
              xmlns:local="clr-namespace:UI"
-             StartupUri="MainWindow.xaml">
+              Startup="Application_Startup"
+             >
     <Application.Resources>
         <ResourceDictionary>
 
@@ -14,9 +15,15 @@
                 <ResourceDictionary Source="/Theme/CleanButton.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
+
+            <DataTemplate DataType="{x:Type viewModel:LoginViewModel}">
+                <view:LoginWindow/>
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
                 <view:HomeView/>
             </DataTemplate>
+
 
             <DataTemplate DataType="{x:Type viewModel:CategoriesViewModel}">
                 <view:CategoriesView/>

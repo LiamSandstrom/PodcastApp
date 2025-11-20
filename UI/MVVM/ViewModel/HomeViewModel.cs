@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UI.MVVM.ViewModel
 {
-    class HomeViewModel
+    public class HomeViewModel
     {
     }
 }
