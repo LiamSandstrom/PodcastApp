@@ -35,6 +35,21 @@ namespace UI.MVVM.ViewModel
                 OnPropertyChanged();
             }
         }
+
+        private string _imageUrl;
+
+        public string ImageUrl
+        {
+            get { return _imageUrl; }
+            set
+            {
+                _imageUrl = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+
         public ObservableCollection<DTOepisode> Episodes { get; set; } = new();
         public ObservableCollection<string> Categories { get; set; } = new();
 
@@ -59,6 +74,7 @@ namespace UI.MVVM.ViewModel
         public void SetPodcast(DTOpodcast podcast)
         {
             Title = podcast.Title;
+            ImageUrl = podcast.ImageUrl;
             _rssUrl = podcast.RssUrl;
 
             Episodes.Clear();

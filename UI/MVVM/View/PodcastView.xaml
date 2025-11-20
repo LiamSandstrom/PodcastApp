@@ -37,15 +37,18 @@
                 <Grid 
                 >
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="220" />
+                        <ColumnDefinition Width="200" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
+
 
                     <Border Grid.Column="0"
                 Grid.Row="0"
                 Background="Beige"
                             CornerRadius="10"
-               />
+               >
+                        <Image Source="{Binding ImageUrl}" />
+                    </Border>
 
                     <Grid
                           Grid.Row="0"
