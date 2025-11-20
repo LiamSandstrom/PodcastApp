@@ -34,6 +34,7 @@ namespace UI.MVVM.ViewModel
 
         private string _searchText;
         private string _lastSearched = "";
+        public readonly int _episodesPerRender = 20;
         public string SearchText
         {
             get { return _searchText; }
@@ -55,12 +56,12 @@ namespace UI.MVVM.ViewModel
         }
 
 
-        private readonly IPodcastService _podcastService;
+        public readonly IPodcastService podcastService;
 
         public MainViewModel()
         {
 
-            _podcastService = new PodcastService(new RssRepository());
+            podcastService = new PodcastService(new RssRepository());
             HomeVM = new HomeViewModel();
             CategoriesVM = new CategoriesViewModel();
             SubscriptionVM = new SubscriptionViewModel();
@@ -96,7 +97,7 @@ namespace UI.MVVM.ViewModel
                     return;
 
                 }
-                var res = await _podcastService.GetPodcastFromRssAsync(SearchText);
+                var res = await podcastService.GetPodcastFromRssAsync(SearchText, _episodesPerRender);
                 if (res == null) return;
 
                 _lastSearched = SearchText;

@@ -11,6 +11,6 @@ namespace BL.Interfaces
     {
         Task<DTOpodcast> GetPodcastFromRssAsync(string rssUrl, int amountOfEpisodes);
 
-        public List<DTOepisode> GetNextEpisodes(DTOpodcast dto, int amountOfEpisodes);
+        public Task<List<DTOepisode>> GetNextEpisodes(string rssUrl, int index, int amountOfEpisodes);
     }
 }

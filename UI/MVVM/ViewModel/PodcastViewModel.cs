@@ -27,9 +27,18 @@ namespace UI.MVVM.ViewModel
         public ObservableCollection<string> Categories { get; set; } = new();
 
         public readonly MainViewModel MVM;
+
+        public RelayCommand GetNextEpisodes { get; }
+
         public PodcastViewModel(MainViewModel MVM)
         {
             this.MVM = MVM;
+
+            GetNextEpisodes = new RelayCommand(o =>
+           {
+
+           });
+
         }
 
         public void SetPodcast(DTOpodcast podcast)
@@ -37,25 +46,26 @@ namespace UI.MVVM.ViewModel
             Title = podcast.Title;
 
             Episodes.Clear();
-            int i = 0;
-            int max = 20;
             foreach (var ep in podcast.Episodes)
             {
-                if (i > max) break;
                 if (ep.Description == "") ep.Description = "Episode has no description...";
                 Episodes.Add(ep);
-                i++;
             }
 
-            i = 0;
             Categories.Clear();
             foreach (var catg in podcast.Categories)
             {
-                if (i > max) break;
                 Categories.Add(catg);
-                i++;
             }
         }
 
+        public void SetNextEpisodes(List<DTOepisode> nextEpisodes)
+        {
+            foreach (var ep in nextEpisodes)
+            {
+                if (ep.Description == "") ep.Description = "Episode has no description...";
+                Episodes.Add(ep);
+            }
+        }
     }
 }
