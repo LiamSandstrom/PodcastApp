@@ -91,7 +91,8 @@ namespace UI.MVVM.ViewModel
 
             SearchCommand = new RelayCommand(async o =>
             {
-                if (SearchText.Equals(_lastSearched))
+                if (String.IsNullOrEmpty(SearchText)) return;
+                if (SearchText.Equals(_lastSearched) && CurrentView == PodcastVM)
                 {
                     RequestScrollToTop?.Invoke();
                     return;
@@ -100,6 +101,7 @@ namespace UI.MVVM.ViewModel
                 var res = await podcastService.GetPodcastFromRssAsync(SearchText, _episodesPerRender);
                 if (res == null) return;
 
+                PodcastVM.Index = res.Episodes.Count;
                 _lastSearched = SearchText;
                 PodcastVM.SetPodcast(res);
                 PodcastViewCommand.Execute(this);

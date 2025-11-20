@@ -14,5 +14,6 @@ namespace BL.DTOmodels
 
         public int EpisodeNumber { get; set; }
         public string DateAndDuration { get; set; }
+        public DateTime Date { get; set; }
     }
 }

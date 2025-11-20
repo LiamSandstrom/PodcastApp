@@ -13,6 +13,8 @@ namespace UI.MVVM.ViewModel
 {
     class PodcastViewModel : ObservableObject
     {
+        private string _rssUrl = "";
+
         private string _title;
         public string Title
         {
@@ -23,20 +25,33 @@ namespace UI.MVVM.ViewModel
                 OnPropertyChanged();
             }
         }
+        private int _index = 0;
+        public int Index
+        {
+            get => _index;
+            set
+            {
+                _index = value;
+                OnPropertyChanged();
+            }
+        }
         public ObservableCollection<DTOepisode> Episodes { get; set; } = new();
         public ObservableCollection<string> Categories { get; set; } = new();
 
         public readonly MainViewModel MVM;
 
-        public RelayCommand GetNextEpisodes { get; }
+        public RelayCommand GetNextEpisodesCommand { get; }
 
         public PodcastViewModel(MainViewModel MVM)
         {
             this.MVM = MVM;
 
-            GetNextEpisodes = new RelayCommand(o =>
+            GetNextEpisodesCommand = new RelayCommand(async o =>
            {
-
+               if (string.IsNullOrWhiteSpace(_rssUrl)) return;
+               var res = await MVM.podcastService.GetNextEpisodesAsync(_rssUrl, Index, MVM._episodesPerRender);
+               if (res == null || res.Count == 0) return;
+               AddEpisodes(res);
            });
 
         }
@@ -44,13 +59,12 @@ namespace UI.MVVM.ViewModel
         public void SetPodcast(DTOpodcast podcast)
         {
             Title = podcast.Title;
+            _rssUrl = podcast.RssUrl;
 
             Episodes.Clear();
-            foreach (var ep in podcast.Episodes)
-            {
-                if (ep.Description == "") ep.Description = "Episode has no description...";
-                Episodes.Add(ep);
-            }
+
+            //Adds episodes and increases Index
+            AddEpisodes(podcast.Episodes);
 
             Categories.Clear();
             foreach (var catg in podcast.Categories)
@@ -59,13 +73,15 @@ namespace UI.MVVM.ViewModel
             }
         }
 
-        public void SetNextEpisodes(List<DTOepisode> nextEpisodes)
+        private void AddEpisodes(List<DTOepisode> episodes)
         {
-            foreach (var ep in nextEpisodes)
+            foreach (var ep in episodes)
             {
                 if (ep.Description == "") ep.Description = "Episode has no description...";
                 Episodes.Add(ep);
+                Index++;
             }
         }
+
     }
 }

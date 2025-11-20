@@ -14,6 +14,7 @@
                       Padding="0,0,30,0"
                       MaxWidth="1300"
                       x:Name="MyScrollViewer"
+                      ScrollChanged="MyScrollViewer_ScrollChanged"
         >
 
         <Grid Margin="0"
@@ -153,53 +154,61 @@
                     Padding="20"
                     Background="#181818"
                     >
+                <Grid>
 
-                <ItemsControl ItemsSource="{Binding Episodes}"
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+
+
+                    <ItemsControl ItemsSource="{Binding Episodes}"
                               SnapsToDevicePixels="True"
                           >
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border BorderBrush="#70f1f1f1"
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="#70f1f1f1"
                             BorderThickness="0,0,0,1"
                             Padding="15"
                             Margin="0,0,0,10"
                             >
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition />
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition />
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
 
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
 
-                                    <TextBlock Grid.Row="0" Text="{Binding Title}"
+                                        <TextBlock Grid.Row="0" Text="{Binding Title}"
                                                Foreground="White"
                                                FontWeight="SemiBold"
                                                FontSize="18"
                                                TextWrapping="Wrap"
                                                />
-                                    <TextBlock Grid.Row="1" Text="{Binding Description}"
+                                        <TextBlock Grid.Row="1" Text="{Binding Description}"
                                                FontWeight="Light"
                                                FontSize="16"
                                                TextWrapping="Wrap"
                                                MinHeight="0"
                                                />
-                                    <TextBlock Grid.Row="2" Text="{Binding DateAndDuration}"
+                                        <TextBlock Grid.Row="2" Text="{Binding DateAndDuration}"
                                                FontWeight="Normal"
                                                Foreground="White"
                                                FontSize="16"
                                                Margin="0,8,0,0"
                                                />
 
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
             </Border>
         </Grid>
     </ScrollViewer>

@@ -35,6 +35,7 @@ namespace BL
                     Description = item.Description,
                     EpisodeNumber = item.EpisodeNumber,
                     DateAndDuration = FormatDateAndDuration(item.PublishDate, item.Duration),
+                    Date = item.PublishDate
 
 
                 }).ToList();
@@ -51,7 +52,7 @@ namespace BL
                     RssUrl = feed.RssUrl,
                     AllEpisodes = allEpisodes,
                     Episodes = limitedEpisodes,
-                    CurrentIndex = limitedEpisodes.Count
+                    CurrentIndex = limitedEpisodes.Count,
                 };
 
 
@@ -68,7 +69,7 @@ namespace BL
 
         }
 
-        public async Task<List<DTOepisode>> GetNextEpisodes(string rssUrl, int index, int amountOfEpisodes)
+        public async Task<List<DTOepisode>> GetNextEpisodesAsync(string rssUrl, int index, int amountOfEpisodes)
         {
             try
             {
@@ -80,7 +81,7 @@ namespace BL
                     Description = item.Description,
                     EpisodeNumber = item.EpisodeNumber,
                     DateAndDuration = FormatDateAndDuration(item.PublishDate, item.Duration),
-
+                    Date = item.PublishDate,
 
                 }).ToList();
 
@@ -88,6 +89,7 @@ namespace BL
 
                 List<DTOepisode> limitedEpisodes = allEpisodes
                     .Skip(index)
+                    .OrderByDescending(i => i.Date)
                     .Take(amountOfEpisodes)
                     .ToList();
 
