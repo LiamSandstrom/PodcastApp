@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace BL.Interfaces
 {
-    public interface IUserService
+    public interface IUserService : IService
     {
+       
         Task<bool> CreateUserAsync(string email);
     }
 }
