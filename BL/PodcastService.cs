@@ -123,5 +123,24 @@ namespace BL
 
             return date + " - " + hours + " " + minutes;
         }
+
+        public DTOepisode? GetEpisodeByNumber(DTOpodcast podcast, int episodeNumber)
+        {
+            try
+            {
+                if (podcast == null || podcast.AllEpisodes == null)
+                    return null;
+
+                var episode = podcast.AllEpisodes
+                                     .FirstOrDefault(e => e.EpisodeNumber == episodeNumber);
+
+                return episode;
+            }
+            catch (Exception ex)
+            {
+                
+                return null;
+            }
+        }
     }
 }
