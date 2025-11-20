@@ -92,7 +92,6 @@ appsettings.*.json
 
 # Windows Presentation Foundation (WPF)
 *.baml
-*.xaml.cs
 
 # WinForms Designer-filer
 *.Designer.cs
