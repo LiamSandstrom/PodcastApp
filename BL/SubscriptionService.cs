@@ -21,24 +21,24 @@ namespace BL
             subscriptionRepo = subRepo;
             podcastRepo = podRepo;
         }
-        public async Task<bool> SubscribeAsync(string userId, string podcastId, string customName)
+        public async Task<bool> SubscribeAsync(string Email, string RssUrl, string customName)
         {
             try
             {
-                var podcast = await podcastRepo.GetByIdAsync(podcastId);
+                var podcast = await podcastRepo.GetByIdAsync(RssUrl);
                 if (podcast == null)
                     return false;
 
 
-                var existing = await subscriptionRepo.GetSubscriptionAsync(userId, podcastId);
+                var existing = await subscriptionRepo.GetSubscriptionAsync(Email, RssUrl);
                 if (existing != null)
                     return false;
 
 
                 var sub = new Subscription
                 {
-                    UserId = userId,
-                    PodcastId = podcastId,
+                    Email = Email,
+                    RssUrl = RssUrl,
                     CustomName = string.IsNullOrWhiteSpace(customName) ? podcast.Title : customName,
                     SubscribedAt = DateTime.Now
                 };
@@ -51,11 +51,11 @@ namespace BL
                 return false;
             }
         }
-        public async Task<bool> UnsubscribeAsync(string userId, string podcastId)
+        public async Task<bool> UnsubscribeAsync(string Email, string RssUrl)
         {
             try
             {
-                var existing = await subscriptionRepo.GetSubscriptionAsync(userId, podcastId);
+                var existing = await subscriptionRepo.GetSubscriptionAsync(Email, RssUrl);
                 if (existing == null)
                     return false;
 
@@ -66,22 +66,22 @@ namespace BL
                 return false;
             }
         }
-        public async Task<List<DTOsubscription>> GetUserSubscriptionsAsync(string userId)
+        public async Task<List<DTOsubscription>> GetUserSubscriptionsAsync(string Email)
         {
             try
             {
-                var subs = await subscriptionRepo.GetByUserIdAsync(userId);
+                var subs = await subscriptionRepo.GetByUserIdAsync(Email);
                 var result = new List<DTOsubscription>();
 
                 foreach (var sub in subs)
                 {
-                    var podcast = await podcastRepo.GetByIdAsync(sub.PodcastId);
+                    var podcast = await podcastRepo.GetByIdAsync(sub.RssUrl);
 
                     result.Add(new DTOsubscription
                     {
-                        SubscriptionId = sub.Id,
-                        UserId = sub.UserId,
-                        PodcastId = sub.PodcastId,
+                       
+                        Email = sub.Email,
+                        RssUrl = sub.RssUrl,
                         CustomName = sub.CustomName,
                         PodcastTitle = podcast?.Title ?? "(deleted)",
                         SubscribedAt = sub.SubscribedAt

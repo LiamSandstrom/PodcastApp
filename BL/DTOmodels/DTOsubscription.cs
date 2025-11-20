@@ -11,9 +11,10 @@ namespace BL.DTOmodels
     {
        
         
-        public string SubscriptionId { get; set; }
-        public required string UserId { get; set; }
-        public required string PodcastId { get; set; }
+        public string Email { get; set; }
+
+         public string RssUrl { get; set; }
+        
         public string PodcastTitle { get; set; }
         public string CustomName { get; set; }
         public DateTime SubscribedAt { get; set; }

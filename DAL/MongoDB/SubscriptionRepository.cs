@@ -15,8 +15,8 @@ namespace DAL.MongoDB
             : base(db, "Subscriptions") 
         {
             var keys = Builders<Subscription>.IndexKeys
-                   .Ascending(s => s.UserId)
-                   .Ascending(s => s.PodcastId);
+                   .Ascending(s => s.Email)
+                   .Ascending(s => s.RssUrl);
 
             var options = new CreateIndexOptions
             {
@@ -42,21 +42,21 @@ namespace DAL.MongoDB
                     (ex.WriteError.Category == ServerErrorCategory.DuplicateKey ||
                      ex.WriteError.Code == 11000))
             {
-                return await _collection.Find(s => s.UserId == entity.UserId && s.PodcastId == entity.PodcastId)
+                return await _collection.Find(s => s.Email == entity.Email && s.RssUrl == entity.RssUrl)
                 .FirstOrDefaultAsync();
             }
         }
-        public async Task<Subscription?> GetSubscriptionAsync(string userId, string podcastId)
+        public async Task<Subscription?> GetSubscriptionAsync(string Email, string RssUrl)
         {
             return await _collection
-                .Find(s => s.UserId == userId && s.PodcastId == podcastId)
+                .Find(s => s.Email == Email && s.RssUrl == RssUrl)
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Subscription>> GetByUserIdAsync(string userId)
+        public async Task<IEnumerable<Subscription>> GetByUserIdAsync(string Email)
         {
             return await _collection
-                .Find(s => s.UserId == userId)
+                .Find(s => s.Email == Email)
                 .ToListAsync();
         }
 

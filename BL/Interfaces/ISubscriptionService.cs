@@ -9,9 +9,9 @@ namespace BL.Interfaces
 {
     public interface ISubscriptionService : IService
     {
-        Task<bool> SubscribeAsync(string userId, string podcastId, string customName);
-        Task<bool> UnsubscribeAsync(string userId, string podcastId);
-        Task<List<DTOsubscription>> GetUserSubscriptionsAsync(string userId);
-        Task<bool> RenameSubscriptionAsync(string userId, string podcastId, string newName);
+        Task<bool> SubscribeAsync(string Email, string RssUrl, string customName);
+        Task<bool> UnsubscribeAsync(string Email, string RssUrl);
+        Task<List<DTOsubscription>> GetUserSubscriptionsAsync(string Email);
+        Task<bool> RenameSubscriptionAsync(string Email, string RssUrl, string newName);
     }
 }

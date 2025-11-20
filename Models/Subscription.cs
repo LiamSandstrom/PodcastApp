@@ -12,10 +12,10 @@ namespace Models
         public string Id { get; set; }
 
         [BsonRepresentation(BsonType.ObjectId)]
-        public required string UserId { get; set; }
+        public required string Email { get; set; }
 
         [BsonRepresentation(BsonType.ObjectId)]
-        public required string PodcastId { get; set; }
+        public required string RssUrl { get; set; }
         public string CustomName { get; set; }
         public DateTime SubscribedAt { get; set; }
         public List<string> Tags { get; set; } = new();

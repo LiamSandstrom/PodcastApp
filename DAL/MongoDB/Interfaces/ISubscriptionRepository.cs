@@ -9,7 +9,7 @@ namespace DAL.MongoDB.Interfaces
 {
     public interface ISubscriptionRepository : IRepository<Subscription>
     {
-        Task<Subscription?> GetSubscriptionAsync(string userId, string podcastId);
-        Task<IEnumerable<Subscription>> GetByUserIdAsync(string userId);
+        Task<Subscription?> GetSubscriptionAsync(string Email, string RssUrl);
+        Task<IEnumerable<Subscription>> GetByUserIdAsync(string Email);
     }
 }
