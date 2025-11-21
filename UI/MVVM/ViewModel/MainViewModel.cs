@@ -1,24 +1,26 @@
-﻿using BL.Interfaces;
+﻿using BL;
+using BL.Interfaces;
+using DAL.MongoDB;
 using DAL.MongoDB.Interfaces;
+using DAL.Rss;
+using MongoDB.Driver;
+using MongoDB.Driver.Core.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using UI.Core;
-using BL;
-using DAL.Rss;
-using System.Windows.Controls;
-using System.Windows;
 
 namespace UI.MVVM.ViewModel
 {
 
     public class MainViewModel : ObservableObject
     {
-        private string _email;
         public HomeViewModel HomeVM { get; set; }
         public CategoriesViewModel CategoriesVM { get; set; }
         public SubscriptionViewModel SubscriptionVM { get; set; }
@@ -58,14 +60,9 @@ namespace UI.MVVM.ViewModel
         }
 
 
-        public readonly IPodcastService podcastService;
 
-        public MainViewModel(string email)
+        public MainViewModel()
         {
-            _email = email;
-            MessageBox.Show("logged in as " + _email);
-
-            podcastService = new PodcastService(new RssRepository());
             HomeVM = new HomeViewModel();
             CategoriesVM = new CategoriesViewModel();
             SubscriptionVM = new SubscriptionViewModel();
@@ -102,7 +99,7 @@ namespace UI.MVVM.ViewModel
                     return;
 
                 }
-                var res = await podcastService.GetPodcastFromRssAsync(SearchText, _episodesPerRender);
+                var res = await Services.PodcastService.GetPodcastFromRssAsync(SearchText, _episodesPerRender);
                 if (res == null) return;
 
                 PodcastVM.Index = res.Episodes.Count;
@@ -111,8 +108,6 @@ namespace UI.MVVM.ViewModel
                 PodcastViewCommand.Execute(this);
                 RequestScrollToTop?.Invoke();
             });
-            _email = email;
         }
-
     }
 }

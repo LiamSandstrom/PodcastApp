@@ -8,11 +8,7 @@ namespace UI.Core
 {
     public class Storage
     {
-        public static string Email;
+        public static string Email { get; set; }
 
-        public void SetEmail(string email)
-        {
-            Email = email;
-        }
     }
 }

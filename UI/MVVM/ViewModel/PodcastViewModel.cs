@@ -48,6 +48,19 @@ namespace UI.MVVM.ViewModel
             }
         }
 
+        private bool _isLiked;
+
+        public bool IsLiked
+        {
+            get { return _isLiked; }
+            set
+            {
+                _isLiked = value;
+                OnPropertyChanged();
+            }
+        }
+
+
 
 
         public ObservableCollection<DTOepisode> Episodes { get; set; } = new();
@@ -56,6 +69,7 @@ namespace UI.MVVM.ViewModel
         public readonly MainViewModel MVM;
 
         public RelayCommand GetNextEpisodesCommand { get; }
+        public RelayCommand LikeButtonCommand { get; }
 
         public PodcastViewModel(MainViewModel MVM)
         {
@@ -64,10 +78,18 @@ namespace UI.MVVM.ViewModel
             GetNextEpisodesCommand = new RelayCommand(async o =>
            {
                if (string.IsNullOrWhiteSpace(_rssUrl)) return;
-               var res = await MVM.podcastService.GetNextEpisodesAsync(_rssUrl, Index, MVM._episodesPerRender);
+               var res = await Services.PodcastService.GetNextEpisodesAsync(_rssUrl, Index, MVM._episodesPerRender);
                if (res == null || res.Count == 0) return;
                AddEpisodes(res);
            });
+
+            LikeButtonCommand = new RelayCommand(async o =>
+            {
+                IsLiked = !IsLiked;
+                var res = await Services.SubscriptionService.SubscribeAsync(Storage.Email, _rssUrl, "");
+                if (res == false) IsLiked = !IsLiked;
+
+            });
 
         }
 

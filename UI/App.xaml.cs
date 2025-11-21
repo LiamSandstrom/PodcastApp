@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using System.Data;
 using System.Windows;
+using UI.Core;
 using UI.MVVM.View;
 using UI.MVVM.ViewModel;
 
@@ -15,6 +16,8 @@ namespace UI
         LoginViewModel loginVM;
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            //SETUP GLOBAL STATIC SERVICE CLASS
+            Services.SetUp();
 
             loginWindow = new LoginWindow();
             loginVM = new LoginViewModel();
@@ -29,7 +32,8 @@ namespace UI
             //need to send to backend and validate
             email = email.Trim();
             if (String.IsNullOrEmpty(email)) return;
-            var mainVM = new MainViewModel(email);
+            Storage.Email = email;
+            var mainVM = new MainViewModel();
             var mainWindow = new MainWindow(mainVM);
 
             mainWindow.Show();
