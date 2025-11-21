@@ -13,6 +13,7 @@ using Models;
 using DTO;
 
 
+
 namespace BL
 {
     public class PodcastService : IPodcastService
@@ -191,6 +192,49 @@ namespace BL
             }
 
             return date + " - " + hours + " " + minutes;
+        }
+        public async Task<List<DTOepisode>> CheckForNewEpisodesAsync(DTOpodcast podcast)
+        {
+            if (podcast == null)
+                throw new ArgumentNullException(nameof(podcast));
+
+            if (string.IsNullOrWhiteSpace(podcast.RssUrl))
+                throw new ArgumentException("Podcast is missing RSS url");
+
+           
+            RssFeed feed = await rssRepo.GetFeed(podcast.RssUrl);
+
+            
+            List<RssItem> feedItems = feed.Items;
+
+           
+            var rssEpisodes = feedItems
+                .Select(item => new DTOepisode
+                {
+                    Title = item.Title ?? "",
+                    Description = item.Description ?? "",
+                    EpisodeNumber = item.EpisodeNumber,
+                    Date = item.PublishDate.ToUniversalTime(),
+                    DateAndDuration = $"{item.PublishDate.ToShortDateString()} | {item.Duration}"
+                })
+                .OrderBy(ep => ep.Date)
+                .ToList();
+
+            
+            var latestSaved = podcast.Episodes
+                .OrderByDescending(e => e.Date)
+                .FirstOrDefault();
+
+           
+            if (latestSaved == null)
+                return rssEpisodes;
+
+           
+            var newEpisodes = rssEpisodes
+                .Where(ep => ep.Date > latestSaved.Date)
+                .ToList();
+
+            return newEpisodes;
         }
     }
 }
