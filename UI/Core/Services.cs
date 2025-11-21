@@ -63,7 +63,7 @@ namespace UI.Core
             var userReo = new UserRepository(db);
 
             //Services
-            PodcastService = new PodcastService(rssRepo);
+            PodcastService = new PodcastService(podRepo, rssRepo);
             SubscriptionService = new SubscriptionService(subRepo, podRepo);
             UserService = new UserService(userReo);
         }

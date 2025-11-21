@@ -15,7 +15,7 @@ namespace Models
         public string Description { get; set; }
         public string ImageUrl { get; set; }
         public required string RssUrl { get; set; }
-        public List<Episode> Episodes { get; set; } = new();
+        public required List<Episode> Episodes { get; set; } = new();
         public DateTime CreatedAt { get; set; }
         public DateTime LastUpdated { get; set; }
 

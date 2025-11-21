@@ -99,7 +99,7 @@ namespace UI.MVVM.ViewModel
                     return;
 
                 }
-                var res = await Services.PodcastService.GetPodcastFromRssAsync(SearchText, _episodesPerRender);
+                var res = await Services.PodcastService.GetPodcastAsync(SearchText, _episodesPerRender);
                 if (res == null) return;
                 bool isLiked = await Services.SubscriptionService.SubscriptionExists(Storage.Email, res.RssUrl);
                 res.IsLiked = isLiked;
