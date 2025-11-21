@@ -114,5 +114,10 @@ namespace BL
                 return false;
             }
         }
+
+        public async Task<bool> SubscriptionExists(string Email, string RssUrl)
+        {
+            return await subscriptionRepo.SubscriptionExists(Email, RssUrl);
+        }
     }
 }

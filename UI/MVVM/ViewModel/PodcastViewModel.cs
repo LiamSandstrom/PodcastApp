@@ -85,11 +85,25 @@ namespace UI.MVVM.ViewModel
 
             LikeButtonCommand = new RelayCommand(async o =>
             {
-                IsLiked = !IsLiked;
-                var res = await Services.SubscriptionService.SubscribeAsync(Storage.Email, _rssUrl, "");
-                if (res == false) IsLiked = !IsLiked;
+                if (!IsLiked) Like();
+                else RemoveLike();
 
             });
+
+        }
+
+        private async void Like()
+        {
+            IsLiked = !IsLiked;
+            var res = await Services.SubscriptionService.SubscribeAsync(Storage.Email, _rssUrl, "");
+            if (res == false) IsLiked = !IsLiked;
+        }
+
+        private async void RemoveLike()
+        {
+            IsLiked = !IsLiked;
+            var res = await Services.SubscriptionService.UnsubscribeAsync(Storage.Email, _rssUrl);
+            if (res == false) IsLiked = !IsLiked;
 
         }
 
@@ -98,6 +112,7 @@ namespace UI.MVVM.ViewModel
             Title = podcast.Title;
             ImageUrl = podcast.ImageUrl;
             _rssUrl = podcast.RssUrl;
+            IsLiked = podcast.IsLiked;
 
             Episodes.Clear();
 

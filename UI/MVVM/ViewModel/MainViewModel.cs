@@ -101,6 +101,8 @@ namespace UI.MVVM.ViewModel
                 }
                 var res = await Services.PodcastService.GetPodcastFromRssAsync(SearchText, _episodesPerRender);
                 if (res == null) return;
+                bool isLiked = await Services.SubscriptionService.SubscriptionExists(Storage.Email, res.RssUrl);
+                res.IsLiked = isLiked;
 
                 PodcastVM.Index = res.Episodes.Count;
                 _lastSearched = SearchText;

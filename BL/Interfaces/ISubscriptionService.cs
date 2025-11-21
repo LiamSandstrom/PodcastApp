@@ -13,5 +13,6 @@ namespace BL.Interfaces
         Task<bool> UnsubscribeAsync(string Email, string RssUrl);
         Task<List<DTOsubscription>> GetUserSubscriptionsAsync(string Email);
         Task<bool> RenameSubscriptionAsync(string Email, string RssUrl, string newName);
+        Task<bool> SubscriptionExists(string Email, string RssUrl);
     }
 }
