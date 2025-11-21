@@ -37,5 +37,7 @@ namespace DAL.MongoDB
         {
             return await _collection.Find(e => e.RssUrl == rssUrl).FirstOrDefaultAsync();
         }
+
+
     }
 }
