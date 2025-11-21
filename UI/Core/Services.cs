@@ -33,25 +33,39 @@ namespace UI.Core
                 _subscriptionService = value;
             }
         }
+
+        private static IUserService _userService;
+        public static IUserService UserService
+        {
+            get => _userService;
+            set
+            {
+                if (_userService != null) return;
+                _userService = value;
+            }
+        }
         public static void SetUp()
         {
-            //Setup services and db/repo injections
+            //Connection to Mongo
             var mongoUri = Environment.GetEnvironmentVariable("MONGO_URI");
             if (string.IsNullOrWhiteSpace(mongoUri))
                 throw new Exception("Missing MONGO_URI environment variable!");
 
             var client = new MongoClient(mongoUri);
-
             string databaseName = "PodcastDB";
             var db = client.GetDatabase(databaseName);
 
+            //Repos
             var rssRepo = new RssRepository();
-            PodcastService = new PodcastService(rssRepo);
 
             var podRepo = new PodcastRepository(db);
             var subRepo = new SubscriptionRepository(db);
+            var userReo = new UserRepository(db);
 
+            //Services
+            PodcastService = new PodcastService(rssRepo);
             SubscriptionService = new SubscriptionService(subRepo, podRepo);
+            UserService = new UserService(userReo);
         }
     }
 }

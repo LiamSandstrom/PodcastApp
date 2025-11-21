@@ -12,7 +12,7 @@ namespace DAL.MongoDB
     public class SubscriptionRepository : MongoRepository<Subscription>, ISubscriptionRepository
     {
         public SubscriptionRepository(IMongoDatabase db)
-            : base(db, "Subscriptions") 
+            : base(db, "Subscriptions")
         {
             var keys = Builders<Subscription>.IndexKeys
                    .Ascending(s => s.Email)
@@ -58,6 +58,15 @@ namespace DAL.MongoDB
             return await _collection
                 .Find(s => s.Email == Email)
                 .ToListAsync();
+        }
+
+        public async Task<bool> SubscriptionExists(string Email, string rssUrl)
+        {
+            var res = await _collection
+                .Find(s => s.Email == Email && s.RssUrl == rssUrl)
+                .FirstOrDefaultAsync();
+
+            return res != null;
         }
 
     }

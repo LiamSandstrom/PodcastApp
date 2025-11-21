@@ -11,10 +11,8 @@ namespace Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
-        [BsonRepresentation(BsonType.ObjectId)]
         public required string Email { get; set; }
 
-        [BsonRepresentation(BsonType.ObjectId)]
         public required string RssUrl { get; set; }
         public string CustomName { get; set; }
         public DateTime SubscribedAt { get; set; }

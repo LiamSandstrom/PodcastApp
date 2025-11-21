@@ -32,5 +32,10 @@ namespace DAL.MongoDB
         {
             return await _collection.Find(e => e.RssUrl == rssUrl).AnyAsync();
         }
+
+        public async Task<Podcast> GetByRssAsync(string rssUrl)
+        {
+            return await _collection.Find(e => e.RssUrl == rssUrl).FirstOrDefaultAsync();
+        }
     }
 }

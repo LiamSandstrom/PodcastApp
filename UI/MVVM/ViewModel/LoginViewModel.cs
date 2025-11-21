@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using UI.Core;
 
 namespace UI.MVVM.ViewModel
@@ -24,8 +25,14 @@ namespace UI.MVVM.ViewModel
 
         public LoginViewModel()
         {
-            LoginCommand = new RelayCommand(o =>
+            LoginCommand = new RelayCommand(async o =>
             {
+                var res = await Services.UserService.CreateUserAsync(Email);
+                if (res == false)
+                {
+                    MessageBox.Show("Invalid Email...");
+                    return;
+                }
                 LogInEvent?.Invoke(Email);
             });
         }

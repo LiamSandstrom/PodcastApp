@@ -25,13 +25,13 @@ namespace BL
         {
             try
             {
-                var podcast = await podcastRepo.GetByIdAsync(RssUrl);
+                var podcast = await podcastRepo.GetByRssAsync(RssUrl);
                 if (podcast == null)
                     return false;
 
 
-                var existing = await subscriptionRepo.GetSubscriptionAsync(Email, RssUrl);
-                if (existing != null)
+                var existing = await subscriptionRepo.SubscriptionExists(Email, RssUrl);
+                if (existing == true)
                     return false;
 
 
@@ -79,7 +79,7 @@ namespace BL
 
                     result.Add(new DTOsubscription
                     {
-                       
+
                         Email = sub.Email,
                         RssUrl = sub.RssUrl,
                         CustomName = sub.CustomName,
