@@ -16,6 +16,6 @@ namespace Models
         public required string RssUrl { get; set; }
         public string CustomName { get; set; }
         public DateTime SubscribedAt { get; set; }
-        public List<string> Tags { get; set; } = new();
+        public List<string> CategoryId { get; set; } = new();
     }
 }
