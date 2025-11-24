@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BL.DTOmodels;
+﻿using BL.DTOmodels;
+using BL.Interfaces;
 using DAL.MongoDB;
 using DAL.MongoDB.Interfaces;
 using DAL.Rss;
 using DAL.Rss.Interfaces;
-using BL.Interfaces;
-using Models;
 using DTO;
+using Microsoft.Extensions.Logging;
+using Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 
 
@@ -29,32 +30,40 @@ namespace BL
 
         public async Task<DTOpodcast> GetPodcastAsync(string rssUrl, int amountOfEpisodes)
         {
-            var pod = await podcastRepo.GetByRssAsync(rssUrl);
-            if (pod != null)
+            try
             {
-                var episodes = pod.Episodes.Select(item => new DTOepisode
+                var pod = await podcastRepo.GetByRssAsync(rssUrl);
+                if (pod != null)
                 {
-                    Title = item.Title,
-                    Description = item.Description,
-                    EpisodeNumber = item.EpisodeNumber,
-                    DateAndDuration = FormatDateAndDuration(item.PublishTime, item.Duration),
-                    Date = item.PublishTime
-                }).ToList();
+                    var episodes = pod.Episodes.Select(item => new DTOepisode
+                    {
+                        Title = item.Title,
+                        Description = item.Description,
+                        EpisodeNumber = item.EpisodeNumber,
+                        DateAndDuration = FormatDateAndDuration(item.PublishTime, item.Duration),
+                        Date = item.PublishTime
+                    }).ToList();
 
-                DTOpodcast res = new DTOpodcast
-                {
-                    Title = pod.Title,
-                    Description = pod.Description,
-                    Authors = pod.Authors,
-                    Categories = pod.Categories,
-                    ImageUrl = pod.ImageUrl,
-                    RssUrl = pod.RssUrl,
-                    Episodes = episodes,
-                };
-                return res;
+                    DTOpodcast res = new DTOpodcast
+                    {
+                        Title = pod.Title,
+                        Description = pod.Description,
+                        Authors = pod.Authors,
+                        Categories = pod.Categories,
+                        ImageUrl = pod.ImageUrl,
+                        RssUrl = pod.RssUrl,
+                        Episodes = episodes,
+                    };
+                    return res;
+
+                }
+
+                return await GetPodcastFromRssAsync(rssUrl, amountOfEpisodes);
             }
-
-            return await GetPodcastFromRssAsync(rssUrl, amountOfEpisodes);
+            catch
+            {
+                return null;
+            }
         }
 
         public async Task<DTOpodcast> GetPodcastFromRssAsync(string rssUrl, int amountOfEpisodes)
