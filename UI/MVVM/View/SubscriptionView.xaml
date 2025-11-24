@@ -52,7 +52,7 @@
                                      >
                                     <Image Source="{Binding PodcastImgUrl}" />
                                 </Border>
-                                <TextBlock Grid.Column="1" Text="{Binding PodcastTitle}"
+                                <TextBlock Grid.Column="1" Text="{Binding CustomName}"
                                                Foreground="White"
                                                FontWeight="SemiBold"
                                                FontSize="22"

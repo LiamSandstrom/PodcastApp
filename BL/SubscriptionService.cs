@@ -120,5 +120,25 @@ namespace BL
         {
             return await subscriptionRepo.SubscriptionExists(Email, RssUrl);
         }
+
+        public async Task<DTOsubscription?> GetSubscriptionAsync(string Email, string RssUrl)
+        {
+            try
+            {
+                var res = await subscriptionRepo.GetSubscriptionAsync(Email, RssUrl);
+                return new DTOsubscription
+                {
+                    Email = res.Email,
+                    RssUrl = res.RssUrl,
+                    PodcastTitle = res.CustomName,
+                    CustomName = res.CustomName,
+                    SubscribedAt = res.SubscribedAt,
+                };
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }
