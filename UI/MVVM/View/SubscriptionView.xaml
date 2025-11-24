@@ -28,6 +28,7 @@
                             Width="600"
                             Background="#0F0F0F"
                             CornerRadius="15"
+                            Cursor="Hand"
                             >
                             <Border.InputBindings>
                                 <MouseBinding MouseAction="LeftClick"
