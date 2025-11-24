@@ -36,6 +36,9 @@ namespace UI
             var mainVM = new MainViewModel();
             var mainWindow = new MainWindow(mainVM);
 
+            // Make this the app's main window
+            Application.Current.MainWindow = mainWindow;
+
             mainWindow.Show();
 
             loginWindow.Close();
