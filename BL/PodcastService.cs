@@ -70,8 +70,8 @@ namespace BL
         {
             try
             {
-
                 var feed = await rssRepo.GetFeed(rssUrl);
+                await AddPodcast(feed);
 
                 var allEpisodes = feed.Items.Select(item => new DTOepisode
                 {
@@ -112,7 +112,6 @@ namespace BL
             try
             {
                 var feed = await rssRepo.GetFeed(rssUrl);
-                await AddPodcast(feed);
 
                 var allEpisodes = feed.Items.Select(item => new DTOepisode
                 {
@@ -140,9 +139,51 @@ namespace BL
             }
         }
 
+        public async Task<List<DTOpodcast>> GetAllPodcastsFromRssListAsync(List<string> RssList)
+        {
+            try
+            {
+                var podcasts = await podcastRepo.GetAllByRssAsync(RssList);
+
+                List<DTOpodcast> resList = new();
+
+                foreach (var pod in podcasts)
+                {
+                    var episodes = pod.Episodes.Select(item => new DTOepisode
+                    {
+                        Title = item.Title,
+                        Description = item.Description,
+                        EpisodeNumber = item.EpisodeNumber,
+                        DateAndDuration = FormatDateAndDuration(item.PublishTime, item.Duration),
+                        Date = item.PublishTime
+                    }).ToList();
+
+                    DTOpodcast res = new DTOpodcast
+                    {
+                        Title = pod.Title,
+                        Description = pod.Description,
+                        Authors = pod.Authors,
+                        Categories = pod.Categories,
+                        ImageUrl = pod.ImageUrl,
+                        RssUrl = pod.RssUrl,
+                        Episodes = episodes,
+                    };
+
+                    resList.Add(res);
+                }
+                return resList;
+            }
+            catch (Exception ex)
+            {
+                return new List<DTOpodcast>();
+            }
+
+        }
+
         private async Task AddPodcast(RssFeed feed)
         {
-            var amountOfEpisodes = 20;
+
+            int amountOfEpisodes = 10;
 
             try
             {
@@ -177,6 +218,7 @@ namespace BL
             {
             }
         }
+
 
 
         public static string FormatDateAndDuration(DateTime publishDate, string durationString)

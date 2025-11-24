@@ -38,6 +38,14 @@ namespace DAL.MongoDB
             return await _collection.Find(e => e.RssUrl == rssUrl).FirstOrDefaultAsync();
         }
 
+        public async Task<List<Podcast>> GetAllByRssAsync(List<string> rssUrls)
+        {
+            var filter = Builders<Podcast>.Filter.In(p => p.RssUrl, rssUrls);
+            return await _collection.Find(filter).ToListAsync();
+        }
+
+
+
         public async Task AddNewEpisodesAsync(string podcastId, List<Episode> newEpisodes)
         {
             if (string.IsNullOrWhiteSpace(podcastId) || newEpisodes == null || !newEpisodes.Any())

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -38,7 +39,7 @@ namespace UI.MVVM.ViewModel
 
         private string _searchText;
         private string _lastSearched = "";
-        public readonly int _episodesPerRender = 20;
+        public readonly int _episodesPerRender = 10;
         public string SearchText
         {
             get { return _searchText; }
@@ -65,7 +66,7 @@ namespace UI.MVVM.ViewModel
         {
             HomeVM = new HomeViewModel();
             CategoriesVM = new CategoriesViewModel();
-            SubscriptionVM = new SubscriptionViewModel();
+            SubscriptionVM = new SubscriptionViewModel(this);
             PodcastVM = new PodcastViewModel(this);
             CurrentView = HomeVM;
 
@@ -79,8 +80,10 @@ namespace UI.MVVM.ViewModel
                 CurrentView = CategoriesVM;
             });
 
-            SubscriptionViewCommand = new RelayCommand(o =>
+            SubscriptionViewCommand = new RelayCommand(async o =>
             {
+                var subs = await Services.SubscriptionService.GetUserSubscriptionsAsync(Storage.Email);
+                SubscriptionVM.SetPodcasts(subs);
                 CurrentView = SubscriptionVM;
             });
 
@@ -92,24 +95,31 @@ namespace UI.MVVM.ViewModel
 
             SearchCommand = new RelayCommand(async o =>
             {
-                if (String.IsNullOrEmpty(SearchText)) return;
-                if (SearchText.Equals(_lastSearched) && CurrentView == PodcastVM)
-                {
-                    RequestScrollToTop?.Invoke();
-                    return;
-
-                }
-                var res = await Services.PodcastService.GetPodcastAsync(SearchText, _episodesPerRender);
-                if (res == null) return;
-                bool isLiked = await Services.SubscriptionService.SubscriptionExists(Storage.Email, res.RssUrl);
-                res.IsLiked = isLiked;
-
-                PodcastVM.Index = res.Episodes.Count;
-                _lastSearched = SearchText;
-                PodcastVM.SetPodcast(res);
-                PodcastViewCommand.Execute(this);
-                RequestScrollToTop?.Invoke();
+                await Search(SearchText, _lastSearched);
             });
+
+        }
+
+        public async Task Search(string searchText, string lastSearched = "")
+        {
+            if (String.IsNullOrEmpty(searchText)) return;
+            if (searchText.Equals(lastSearched) && CurrentView == PodcastVM)
+            {
+                RequestScrollToTop?.Invoke();
+                return;
+
+            }
+            var res = await Services.PodcastService.GetPodcastAsync(searchText, _episodesPerRender);
+            if (res == null) return;
+            bool isLiked = await Services.SubscriptionService.SubscriptionExists(Storage.Email, res.RssUrl);
+            res.IsLiked = isLiked;
+
+            PodcastVM.Index = res.Episodes.Count;
+            _lastSearched = searchText;
+            PodcastVM.SetPodcast(res);
+            PodcastViewCommand.Execute(this);
+            RequestScrollToTop?.Invoke();
+
         }
     }
 }

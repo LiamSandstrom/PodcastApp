@@ -72,6 +72,7 @@
                    FontSize="50"
                    FontWeight="Bold"
                    Foreground="White"
+                   TextWrapping="Wrap"
                    />
 
                         <Button Grid.Column="1"

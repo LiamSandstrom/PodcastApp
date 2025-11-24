@@ -75,7 +75,7 @@ namespace BL
 
                 foreach (var sub in subs)
                 {
-                    var podcast = await podcastRepo.GetByIdAsync(sub.RssUrl);
+                    var podcast = await podcastRepo.GetByRssAsync(sub.RssUrl);
 
                     result.Add(new DTOsubscription
                     {
@@ -83,6 +83,7 @@ namespace BL
                         Email = sub.Email,
                         RssUrl = sub.RssUrl,
                         CustomName = sub.CustomName,
+                        PodcastImgUrl = podcast.ImageUrl,
                         PodcastTitle = podcast?.Title ?? "(deleted)",
                         SubscribedAt = sub.SubscribedAt
                     });

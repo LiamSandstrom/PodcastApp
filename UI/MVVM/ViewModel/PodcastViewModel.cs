@@ -60,9 +60,6 @@ namespace UI.MVVM.ViewModel
             }
         }
 
-
-
-
         public ObservableCollection<DTOepisode> Episodes { get; set; } = new();
         public ObservableCollection<string> Categories { get; set; } = new();
 
