@@ -55,5 +55,9 @@ namespace UI.MVVM.View
             }
 
         }
+        private void MyTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            ((TextBox)sender).CaretIndex = ((TextBox)sender).Text.Length;
+        }
     }
 }

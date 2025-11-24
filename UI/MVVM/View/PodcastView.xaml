@@ -69,6 +69,8 @@
 
                         <TextBox Text="{Binding Title}"
          IsReadOnly="{Binding NotEditing}"
+         GotFocus="MyTextBox_GotFocus"
+         CaretBrush="White"
          Background="Transparent"
          FontSize="50"
          FontWeight="Bold"
@@ -81,6 +83,7 @@
                                     <Style.Triggers>
                                         <Trigger Property="IsReadOnly" Value="False">
                                             <Setter Property="BorderThickness" Value="1"/>
+                                            <Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Self}}"/>
                                         </Trigger>
                                     </Style.Triggers>
                                 </Style>
