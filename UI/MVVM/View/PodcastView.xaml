@@ -67,26 +67,52 @@
                             <RowDefinition Height="30"/>
                         </Grid.RowDefinitions>
 
-                        <TextBlock Text="{Binding Title}"
-                                   Grid.Column="0"
-                   FontSize="50"
-                   FontWeight="Bold"
-                   Foreground="White"
-                   TextWrapping="Wrap"
-                   />
+                        <TextBox Text="{Binding Title}"
+         IsReadOnly="{Binding NotEditing}"
+         Background="Transparent"
+         FontSize="50"
+         FontWeight="Bold"
+         Foreground="White"
+         TextWrapping="Wrap"
+         Grid.Column="0">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsReadOnly" Value="False">
+                                            <Setter Property="BorderThickness" Value="1"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
 
                         <Button Grid.Column="1"
                                     Background="Transparent"
                                     BorderThickness="0"
                                     Style="{StaticResource ModernButton}"
                             Width="33"
+                            Command="{Binding EditingCommand}"
                                     >
                             <Image 
-                               Source="/Icons/Edit.png"
                                Width="26"
                                Height="26"
                                VerticalAlignment="Bottom"
-                               />
+                               >
+
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <!-- default image -->
+                                        <Setter Property="Source" Value="/Icons/Edit.png" />
+
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding NotEditing}" Value="False">
+                                                <Setter Property="Source" Value="/Icons/Save.png" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
                         </Button>
                         <Button Grid.Column="2"
                                     Background="Transparent"

@@ -14,6 +14,7 @@
 		<None Remove="Icons\Edit.png" />
 		<None Remove="Icons\LikeAdd.png" />
 		<None Remove="Icons\Liked.png" />
+		<None Remove="Icons\Save.png" />
 		<None Remove="Icons\SearchIcon.png" />
 	</ItemGroup>
 
@@ -31,6 +32,7 @@
 		<Resource Include="Icons\Edit.png" />
 		<Resource Include="Icons\LikeAdd.png" />
 		<Resource Include="Icons\Liked.png" />
+		<Resource Include="Icons\Save.png" />
 		<Resource Include="Icons\SearchIcon.png" />
 	</ItemGroup>
 

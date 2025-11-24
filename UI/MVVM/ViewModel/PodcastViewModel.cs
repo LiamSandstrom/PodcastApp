@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using UI.Core;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -59,6 +60,20 @@ namespace UI.MVVM.ViewModel
                 OnPropertyChanged();
             }
         }
+        private bool _notEditing = true;
+        public bool NotEditing
+        {
+            get => _notEditing;
+            set
+            {
+                _notEditing = value;
+                if (_notEditing == true)
+                {
+                    UpdateCustomName();
+                }
+                OnPropertyChanged();
+            }
+        }
 
         public ObservableCollection<DTOepisode> Episodes { get; set; } = new();
         public ObservableCollection<string> Categories { get; set; } = new();
@@ -67,6 +82,7 @@ namespace UI.MVVM.ViewModel
 
         public RelayCommand GetNextEpisodesCommand { get; }
         public RelayCommand LikeButtonCommand { get; }
+        public ICommand EditingCommand { get; }
 
         public PodcastViewModel(MainViewModel MVM)
         {
@@ -87,12 +103,14 @@ namespace UI.MVVM.ViewModel
 
             });
 
+            EditingCommand = new RelayCommand(_ => NotEditing = !NotEditing);
+
         }
 
         private async void Like()
         {
             IsLiked = !IsLiked;
-            var res = await Services.SubscriptionService.SubscribeAsync(Storage.Email, _rssUrl, "");
+            var res = await Services.SubscriptionService.SubscribeAsync(Storage.Email, _rssUrl, Title);
             if (res == false) IsLiked = !IsLiked;
         }
 
@@ -131,6 +149,11 @@ namespace UI.MVVM.ViewModel
                 Episodes.Add(ep);
                 Index++;
             }
+        }
+
+        private void UpdateCustomName()
+        {
+            Services.SubscriptionService.RenameSubscriptionAsync(Storage.Email, _rssUrl, Title);
         }
 
     }
