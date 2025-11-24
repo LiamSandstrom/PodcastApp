@@ -6,6 +6,7 @@ namespace DAL.MongoDB.Interfaces
     {
         Task<bool> ExistsByRssAsync(string RssUrl);
         public Task<Podcast> GetByRssAsync(string rssUrl);
+        Task AddNewEpisodesAsync(string podcastId, List<Episode> newEpisodes);
     }
 
 }

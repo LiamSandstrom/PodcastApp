@@ -5,21 +5,22 @@ using System.Text;
 using System.Threading.Tasks;
 using BL.DTOmodels;
 using DAL.MongoDB.Interfaces;
+using Models;
 
 namespace BL
 {
-    public class UpdateTimerService : IDisposable
+    public class TimerService : IDisposable
     {
-        private readonly PodcastService _podcastService;
-        private readonly IPodcastRepository _podcastRepo;
+        private readonly PodcastService poddService;
+        private readonly IPodcastRepository poddRepo;
 
         private Timer _timer;
         private int _intervalMinutes;
 
-        public UpdateTimerService(PodcastService podcastService, IPodcastRepository podcastRepo, int intervalMinutes)
+        public TimerService(PodcastService podcastService, IPodcastRepository podcastRepo, int intervalMinutes)
         {
-            _podcastService = podcastService;
-            _podcastRepo = podcastRepo;
+            poddService = podcastService;
+            poddRepo = podcastRepo;
             _intervalMinutes = intervalMinutes;
         }
 
@@ -36,7 +37,7 @@ namespace BL
 
         private async Task RunUpdateCheck()
         {
-            var allPodcasts = await _podcastRepo.GetAllAsync();
+            var allPodcasts = await poddRepo.GetAllAsync();
 
             foreach (var pod in allPodcasts)
             {
@@ -57,7 +58,7 @@ namespace BL
                     }).ToList()
                 };
 
-                var newEpisodes = await _podcastService.CheckForNewEpisodesAsync(dtoPod);
+                var newEpisodes = await poddService.CheckForNewEpisodesAsync(dtoPod);
 
                 if (newEpisodes.Any())
                 {
@@ -67,9 +68,18 @@ namespace BL
                     {
                         Console.WriteLine($"  • {ep.Title}");
 
-                        // lägg till i DB (du behöver en metod för detta)
-                        await _podcastRepo.AddEpisodeAsync(pod.Id, ep);
                     }
+                    var mappedEpisode = newEpisodes.Select(ep => new Episode
+                    {
+                        Title = ep.Title,
+                        Description = ep.Description,
+                        EpisodeNumber = ep.EpisodeNumber,
+                        PublishTime = ep.Date,
+                        Duration = ep.DateAndDuration
+                    }).ToList();
+
+                    await poddRepo.AddNewEpisodesAsync(pod.Id, mappedEpisode);
+
                 }
             }
         }

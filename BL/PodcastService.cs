@@ -195,46 +195,68 @@ namespace BL
         }
         public async Task<List<DTOepisode>> CheckForNewEpisodesAsync(DTOpodcast podcast)
         {
-            if (podcast == null)
-                throw new ArgumentNullException(nameof(podcast));
+            try
+            {
+                if (podcast == null)
+                    throw new ArgumentNullException(nameof(podcast));
 
-            if (string.IsNullOrWhiteSpace(podcast.RssUrl))
-                throw new ArgumentException("Podcast is missing RSS url");
+                if (string.IsNullOrWhiteSpace(podcast.RssUrl))
+                    throw new ArgumentException("Podcast is missing RSS url");
 
-           
-            RssFeed feed = await rssRepo.GetFeed(podcast.RssUrl);
+                
+                RssFeed feed = await rssRepo.GetFeed(podcast.RssUrl);
 
-            
-            List<RssItem> feedItems = feed.Items;
+                
+                var rssEpisodes = feed.Items
+                    .Select(item => new DTOepisode
+                    {
+                        Title = item.Title ?? "",
+                        Description = item.Description ?? "",
+                        EpisodeNumber = item.EpisodeNumber,
+                        Date = item.PublishDate.ToUniversalTime(),
+                        DateAndDuration = $"{item.PublishDate.ToShortDateString()} | {item.Duration}"
+                    })
+                    .OrderBy(ep => ep.Date)
+                    .ToList();
 
-           
-            var rssEpisodes = feedItems
-                .Select(item => new DTOepisode
+                
+                var latestSaved = podcast.Episodes
+                    .OrderByDescending(e => e.Date)
+                    .FirstOrDefault();
+
+               
+                var newEpisodes = latestSaved == null
+                    ? rssEpisodes
+                    : rssEpisodes.Where(ep => ep.Date > latestSaved.Date).ToList();
+
+                
+                if (newEpisodes.Any())
                 {
-                    Title = item.Title ?? "",
-                    Description = item.Description ?? "",
-                    EpisodeNumber = item.EpisodeNumber,
-                    Date = item.PublishDate.ToUniversalTime(),
-                    DateAndDuration = $"{item.PublishDate.ToShortDateString()} | {item.Duration}"
-                })
-                .OrderBy(ep => ep.Date)
-                .ToList();
+                   
+                    var dbPodcast = await podcastRepo.GetByRssAsync(podcast.RssUrl);
 
-            
-            var latestSaved = podcast.Episodes
-                .OrderByDescending(e => e.Date)
-                .FirstOrDefault();
+                    if (dbPodcast != null)
+                    {
+                        
+                        var dbEpisodes = newEpisodes.Select(ep => new Episode
+                        {
+                            Title = ep.Title,
+                            Description = ep.Description,
+                            EpisodeNumber = ep.EpisodeNumber,
+                            PublishTime = ep.Date,
+                            Duration = ep.DateAndDuration
+                        }).ToList();
 
-           
-            if (latestSaved == null)
-                return rssEpisodes;
+                        await podcastRepo.AddNewEpisodesAsync(dbPodcast.Id, dbEpisodes);
+                    }
+                }
 
-           
-            var newEpisodes = rssEpisodes
-                .Where(ep => ep.Date > latestSaved.Date)
-                .ToList();
-
-            return newEpisodes;
+                return newEpisodes;
+            }
+            catch
+            {
+                return new List<DTOepisode>();
+            }
         }
     }
 }

@@ -38,6 +38,22 @@ namespace DAL.MongoDB
             return await _collection.Find(e => e.RssUrl == rssUrl).FirstOrDefaultAsync();
         }
 
+        public async Task AddNewEpisodesAsync(string podcastId, List<Episode> newEpisodes)
+        {
+            if (string.IsNullOrWhiteSpace(podcastId) || newEpisodes == null || !newEpisodes.Any())
+                return;
 
+            var podcast = await GetByIdAsync(podcastId);
+            if (podcast == null)
+                return;
+
+            
+            podcast.Episodes.AddRange(newEpisodes);
+
+            podcast.LastUpdated = DateTime.UtcNow;
+
+           
+            await UpdateAsync(podcast);
+        }
     }
 }
