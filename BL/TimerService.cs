@@ -1,12 +1,11 @@
-﻿using BL.DTOmodels;
-using DAL.MongoDB.Interfaces;
-using Models;
-using MongoDB.Driver;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BL.DTOmodels;
+using DAL.MongoDB.Interfaces;
+using Models;
 
 namespace BL
 {
@@ -14,17 +13,15 @@ namespace BL
     {
         private readonly PodcastService poddService;
         private readonly IPodcastRepository poddRepo;
-        private readonly IMongoClient _client;
 
         private Timer _timer;
         private int _intervalMinutes;
 
-        public TimerService(PodcastService podcastService, IPodcastRepository podcastRepo, int intervalMinutes, IMongoClient mongoClient)
+        public TimerService(PodcastService podcastService, IPodcastRepository podcastRepo, int intervalMinutes)
         {
             poddService = podcastService;
             poddRepo = podcastRepo;
             _intervalMinutes = intervalMinutes;
-            _client = mongoClient;
         }
 
         public void Start()

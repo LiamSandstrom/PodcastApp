@@ -7,13 +7,11 @@ using DAL.Rss.Interfaces;
 using DTO;
 using Microsoft.Extensions.Logging;
 using Models;
-using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ZstdSharp.Unsafe;
 
 
 
@@ -23,15 +21,12 @@ namespace BL
     {
         private readonly IRssRepository rssRepo;
         private readonly IPodcastRepository podcastRepo;
-        private readonly IMongoClient _client;
         private int amountOfEpisodes = 10;
 
-        public PodcastService(IPodcastRepository podcastRepository, IRssRepository rssRepository, IMongoClient mongoClient)
+        public PodcastService(IPodcastRepository podcastRepository, IRssRepository rssRepository)
         {
             rssRepo = rssRepository;
             podcastRepo = podcastRepository;
-            _client = mongoClient;
-
         }
 
         public async Task<DTOpodcast> GetPodcastAsync(string rssUrl, int amountOfEpisodes)
