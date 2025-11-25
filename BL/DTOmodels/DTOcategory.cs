@@ -9,6 +9,7 @@ namespace BL.DTOmodels
 {
     public class DTOcategory : IDTOmodels
     {
+        public string Id { get; set; }
         public string Name { get; set; }
     }
 }

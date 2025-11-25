@@ -85,7 +85,8 @@ namespace BL
                         CustomName = sub.CustomName,
                         PodcastImgUrl = podcast.ImageUrl,
                         PodcastTitle = podcast?.Title ?? "(deleted)",
-                        SubscribedAt = sub.SubscribedAt
+                        SubscribedAt = sub.SubscribedAt,
+                        CategoryId = sub.CategoryId
                     });
                 }
 
@@ -133,12 +134,37 @@ namespace BL
                     PodcastTitle = res.CustomName,
                     CustomName = res.CustomName,
                     SubscribedAt = res.SubscribedAt,
+                    CategoryId = res.CategoryId
                 };
             }
             catch (Exception ex)
             {
                 return null;
             }
+        }
+
+        public async Task<List<DTOsubscription>> GetUserSubscriptionsByCategory(string UserEmail, string CategoryId)
+        {
+            var subs = await subscriptionRepo.GetByCategoryAsync(UserEmail, CategoryId);
+            var result = new List<DTOsubscription>();
+
+            foreach (var sub in subs)
+            {
+                var podcast = await podcastRepo.GetByRssAsync(sub.RssUrl);
+
+                result.Add(new DTOsubscription
+                {
+                    Email = sub.Email,
+                    RssUrl = sub.RssUrl,
+                    CustomName = sub.CustomName,
+                    PodcastImgUrl = podcast?.ImageUrl,
+                    PodcastTitle = podcast?.Title ?? "(deleted)",
+                    SubscribedAt = sub.SubscribedAt,
+                    CategoryId = sub.CategoryId
+                });
+            }
+
+            return result;
         }
     }
 }

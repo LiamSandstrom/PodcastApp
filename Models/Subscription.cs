@@ -17,5 +17,7 @@ namespace Models
         public string CustomName { get; set; }
         public DateTime SubscribedAt { get; set; }
         public List<string> CategoryId { get; set; } = new();
+
+        public string? UserEmail { get; set; }
     }
 }
