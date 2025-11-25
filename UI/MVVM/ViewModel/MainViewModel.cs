@@ -121,6 +121,8 @@ namespace UI.MVVM.ViewModel
             {
                 res.IsLiked = false;
             }
+            bool isLiked = await Services.SubscriptionService.SubscriptionExists(Storage.Email, res.RssUrl);
+            res.IsLiked = isLiked;
 
             PodcastVM.Index = res.Episodes.Count;
             _lastSearched = searchText;

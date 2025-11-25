@@ -55,12 +55,12 @@ namespace DAL.MongoDB
             if (podcast == null)
                 return;
 
-            
+
             podcast.Episodes.AddRange(newEpisodes);
 
             podcast.LastUpdated = DateTime.UtcNow;
 
-           
+
             await UpdateAsync(podcast);
         }
     }
