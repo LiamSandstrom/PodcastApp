@@ -21,6 +21,7 @@ namespace BL
     {
         private readonly IRssRepository rssRepo;
         private readonly IPodcastRepository podcastRepo;
+        private int amountOfEpisodes = 10;
 
         public PodcastService(IPodcastRepository podcastRepository, IRssRepository rssRepository)
         {
@@ -183,7 +184,6 @@ namespace BL
         private async Task AddPodcast(RssFeed feed)
         {
 
-            int amountOfEpisodes = 10;
 
             try
             {
@@ -254,10 +254,10 @@ namespace BL
                 if (string.IsNullOrWhiteSpace(podcast.RssUrl))
                     throw new ArgumentException("Podcast is missing RSS url");
 
-                
+
                 RssFeed feed = await rssRepo.GetFeed(podcast.RssUrl);
 
-                
+
                 var rssEpisodes = feed.Items
                     .Select(item => new DTOepisode
                     {
@@ -270,25 +270,25 @@ namespace BL
                     .OrderBy(ep => ep.Date)
                     .ToList();
 
-                
+
                 var latestSaved = podcast.Episodes
                     .OrderByDescending(e => e.Date)
                     .FirstOrDefault();
 
-               
+
                 var newEpisodes = latestSaved == null
                     ? rssEpisodes
                     : rssEpisodes.Where(ep => ep.Date > latestSaved.Date).ToList();
 
-                
+
                 if (newEpisodes.Any())
                 {
-                   
+
                     var dbPodcast = await podcastRepo.GetByRssAsync(podcast.RssUrl);
 
                     if (dbPodcast != null)
                     {
-                        
+
                         var dbEpisodes = newEpisodes.Select(ep => new Episode
                         {
                             Title = ep.Title,
