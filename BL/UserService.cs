@@ -1,22 +1,25 @@
-﻿using System;
+﻿using BL.Interfaces;
+using DAL.MongoDB.Interfaces;
+using Models;
+using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using DAL.MongoDB.Interfaces;
-using Models;
-using BL.Interfaces;
 
 namespace BL
 {
-   public class UserService : IUserService
+    public class UserService : IUserService
     {
         private readonly IUserRepository userRepository;
+        private readonly IMongoClient _client;
 
-        public UserService (IUserRepository userRepo)
+        public UserService(IUserRepository userRepo, IMongoClient mongoClient)
         {
             userRepository = userRepo;
+            _client = mongoClient;
         }
         public async Task<bool> CreateUserAsync(string email)
         {

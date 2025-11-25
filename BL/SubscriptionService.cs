@@ -1,13 +1,14 @@
-﻿using System;
+﻿using BL.DTOmodels;
+using BL.Interfaces;
+using DAL.MongoDB.Interfaces;
+using Models;
+using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
-using BL.DTOmodels;
-using BL.Interfaces;
-using DAL.MongoDB.Interfaces;
-using Models;
 
 
 namespace BL
@@ -16,10 +17,12 @@ namespace BL
     {
         private readonly ISubscriptionRepository subscriptionRepo;
         private readonly IPodcastRepository podcastRepo;
-        public SubscriptionService(ISubscriptionRepository subRepo, IPodcastRepository podRepo)
+        private readonly IMongoClient _client;
+        public SubscriptionService(ISubscriptionRepository subRepo, IPodcastRepository podRepo, IMongoClient mongoClient)
         {
             subscriptionRepo = subRepo;
             podcastRepo = podRepo;
+            _client = mongoClient;
         }
         public async Task<bool> SubscribeAsync(string Email, string RssUrl, string customName)
         {
