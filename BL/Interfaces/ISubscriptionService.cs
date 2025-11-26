@@ -15,6 +15,6 @@ namespace BL.Interfaces
         Task<bool> RenameSubscriptionAsync(string Email, string RssUrl, string newName);
         Task<bool> SubscriptionExists(string Email, string RssUrl);
         Task<DTOsubscription> GetSubscriptionAsync(string Email, string RssUrl);
-        Task<List<DTOsubscription>> GetUserSubscriptionsByCategory(string UserEmail, string CategoryId);
+        public Task<List<DTOsubscription>> GetSubscribedPodcastsByCategory(string userEmail, string categoryId);
     }
 }

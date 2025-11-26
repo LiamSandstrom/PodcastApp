@@ -13,6 +13,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Theme/MenuButtonTheme.xaml"/>
                 <ResourceDictionary Source="/Theme/CleanButton.xaml"/>
+                <ResourceDictionary Source="/Theme/DropDown.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
 

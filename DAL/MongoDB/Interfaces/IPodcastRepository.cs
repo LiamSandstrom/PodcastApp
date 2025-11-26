@@ -8,6 +8,8 @@ namespace DAL.MongoDB.Interfaces
         public Task<Podcast> GetByRssAsync(string rssUrl);
         Task AddNewEpisodesAsync(string podcastId, List<Episode> newEpisodes);
         public Task<List<Podcast>> GetAllByRssAsync(List<string> rssUrls);
+        public Task<List<Podcast>> GetByCategory(string categoryId);
+        public Task<List<Podcast>> GetByRssUrlsAndCategoryAsync(List<string> rssUrls, string categoryId);
     }
 
 }

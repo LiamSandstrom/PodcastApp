@@ -69,12 +69,18 @@ namespace DAL.MongoDB
             return res != null;
         }
 
-        public async Task<IEnumerable<Subscription>> GetByCategoryAsync(string UserEmail, string CategoryId)
+        public async Task<List<Subscription>> GetByCategoryAsync(string userEmail, string categoryId)
         {
-            return await _collection
-                .Find(s => s.UserEmail == UserEmail && s.CategoryId.Contains(CategoryId))
-                .ToListAsync();
+            var filter = Builders<Subscription>.Filter.And(
+                Builders<Subscription>.Filter.Eq(s => s.UserEmail, userEmail),
+                Builders<Subscription>.Filter.AnyEq(s => s.CategoryId, categoryId)
+            );
+
+            return await _collection.Find(filter).ToListAsync();
         }
+
+
+
 
     }
 }

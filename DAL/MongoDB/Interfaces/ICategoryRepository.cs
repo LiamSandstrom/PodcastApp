@@ -9,5 +9,8 @@ namespace DAL.MongoDB.Interfaces
 {
     public interface ICategoryRepository : IRepository<Category>
     {
+        public Task<List<string>> GetNamesByIds(List<string> ids);
+        public Task<List<Category>> GetAllUserCategories(string email);
+        public Task<string?> GetIdByNameAndEmail(string name, string email);
     }
 }

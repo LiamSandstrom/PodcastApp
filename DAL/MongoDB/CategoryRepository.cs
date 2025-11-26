@@ -43,5 +43,29 @@ namespace DAL.MongoDB
                 ).FirstOrDefaultAsync();
             }
         }
+
+        public async Task<List<string>> GetNamesByIds(List<string> ids)
+        {
+            return await _collection
+                .Find(c => ids.Contains(c.Id))
+                .Project(c => c.Name)
+                .ToListAsync();
+
+        }
+
+        public async Task<List<Category>> GetAllUserCategories(string email)
+        {
+            return await _collection.Find(c => c.UserEmail == email).ToListAsync();
+        }
+
+        public async Task<string?> GetIdByNameAndEmail(string name, string email)
+        {
+            var category = await _collection
+                .Find(c => c.Name == name && c.UserEmail == email)
+                .Project(c => c.Id)
+                .FirstOrDefaultAsync();
+
+            return category;
+        }
     }
 }

@@ -143,28 +143,47 @@ namespace BL
             }
         }
 
-        public async Task<List<DTOsubscription>> GetUserSubscriptionsByCategory(string UserEmail, string CategoryId)
+        public async Task<List<DTOsubscription>> GetSubscribedPodcastsByCategory(string userEmail, string categoryId)
         {
-            var subs = await subscriptionRepo.GetByCategoryAsync(UserEmail, CategoryId);
-            var result = new List<DTOsubscription>();
-
-            foreach (var sub in subs)
+            try
             {
-                var podcast = await podcastRepo.GetByRssAsync(sub.RssUrl);
+                var subscriptions = await subscriptionRepo.GetByUserIdAsync(userEmail);
+                if (!subscriptions.Any()) return new List<DTOsubscription>();
 
-                result.Add(new DTOsubscription
-                {
-                    Email = sub.Email,
-                    RssUrl = sub.RssUrl,
-                    CustomName = sub.CustomName,
-                    PodcastImgUrl = podcast?.ImageUrl,
-                    PodcastTitle = podcast?.Title ?? "(deleted)",
-                    SubscribedAt = sub.SubscribedAt,
-                    CategoryId = sub.CategoryId
-                });
+                var rssUrls = subscriptions.Select(s => s.RssUrl).ToList();
+                var podcasts = await podcastRepo.GetAllByRssAsync(rssUrls);
+
+                var filtered = subscriptions
+                    .Select(sub =>
+                    {
+                        var pod = podcasts.FirstOrDefault(p => p.RssUrl == sub.RssUrl);
+                        if (pod != null && pod.Categories.Contains(categoryId))
+                        {
+                            return new DTOsubscription
+                            {
+                                Email = sub.Email,
+                                RssUrl = sub.RssUrl,
+                                CustomName = sub.CustomName,
+                                PodcastTitle = pod.Title,
+                                PodcastImgUrl = pod.ImageUrl,
+                                SubscribedAt = sub.SubscribedAt,
+                                CategoryId = sub.CategoryId
+                            };
+                        }
+                        return null;
+                    })
+                    .Where(dto => dto != null)
+                    .ToList()!;
+
+                return filtered;
             }
-
-            return result;
+            catch (Exception)
+            {
+                return new List<DTOsubscription>();
+            }
         }
+
+
+
     }
 }

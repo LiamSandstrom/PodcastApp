@@ -7,14 +7,27 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid HorizontalAlignment="center"
-          VerticalAlignment="Center">
+          VerticalAlignment="Top">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition  Height="*" />
+        </Grid.RowDefinitions>
+
+        <ComboBox  Width="150" ItemsSource="{Binding Categories}"
+          SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
+          DisplayMemberPath="Name"
+/>
 
         <ScrollViewer 
+            Grid.Row="1"
                       VerticalScrollBarVisibility="Auto"
                       Padding="0,0,30,0"
                       MaxWidth="1300"
                       x:Name="MyScrollViewer"
-        >
+     >
+
+
 
             <ItemsControl ItemsSource="{Binding Podcasts}"
                               SnapsToDevicePixels="True"

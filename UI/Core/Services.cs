@@ -44,6 +44,16 @@ namespace UI.Core
                 _userService = value;
             }
         }
+        private static ICategoryService _categoryService;
+        public static ICategoryService CategoryService
+        {
+            get => _categoryService;
+            set
+            {
+                if (_categoryService != null) return;
+                _categoryService = value;
+            }
+        }
         public static void SetUp()
         {
             //Connection to Mongo
@@ -60,12 +70,14 @@ namespace UI.Core
 
             var podRepo = new PodcastRepository(db);
             var subRepo = new SubscriptionRepository(db);
-            var userReo = new UserRepository(db);
+            var userRepo = new UserRepository(db);
+            var categoryRepo = new CategoryRepository(db);
 
             //Services
-            PodcastService = new PodcastService(podRepo, rssRepo);
+            PodcastService = new PodcastService(podRepo, rssRepo, categoryRepo);
             SubscriptionService = new SubscriptionService(subRepo, podRepo);
-            UserService = new UserService(userReo);
+            UserService = new UserService(userRepo);
+            CategoryService = new CategoryService(categoryRepo);
         }
     }
 }

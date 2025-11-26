@@ -21,12 +21,14 @@ namespace BL
     {
         private readonly IRssRepository rssRepo;
         private readonly IPodcastRepository podcastRepo;
+        private readonly ICategoryRepository categoryRepo;
         private int amountOfEpisodes = 10;
 
-        public PodcastService(IPodcastRepository podcastRepository, IRssRepository rssRepository)
+        public PodcastService(IPodcastRepository podcastRepository, IRssRepository rssRepository, ICategoryRepository categoryRepository)
         {
             rssRepo = rssRepository;
             podcastRepo = podcastRepository;
+            categoryRepo = categoryRepository;
         }
 
         public async Task<DTOpodcast> GetPodcastAsync(string rssUrl, int amountOfEpisodes)
@@ -45,12 +47,14 @@ namespace BL
                         Date = item.PublishTime
                     }).ToList();
 
+                    var categories = await categoryRepo.GetNamesByIds(pod.Categories);
+
                     DTOpodcast res = new DTOpodcast
                     {
                         Title = pod.Title,
                         Description = pod.Description,
                         Authors = pod.Authors,
-                        Categories = pod.Categories,
+                        Categories = categories,
                         ImageUrl = pod.ImageUrl,
                         RssUrl = pod.RssUrl,
                         Episodes = episodes,
@@ -72,7 +76,18 @@ namespace BL
             try
             {
                 var feed = await rssRepo.GetFeed(rssUrl);
-                await AddPodcast(feed);
+                List<string> categories = new();
+                foreach (var category in feed.Categories)
+                {
+                    Category res = new Category
+                    {
+                        Name = category,
+                        UserEmail = null
+                    };
+                    var cat = await categoryRepo.AddAsync(res);
+                    categories.Add(cat.Id);
+                }
+                await AddPodcast(feed, categories);
 
                 var allEpisodes = feed.Items.Select(item => new DTOepisode
                 {
@@ -181,7 +196,7 @@ namespace BL
 
         }
 
-        private async Task AddPodcast(RssFeed feed)
+        private async Task AddPodcast(RssFeed feed, List<string> categories)
         {
 
 
@@ -202,7 +217,7 @@ namespace BL
                 {
                     Title = feed.Title,
                     Authors = feed.Authors,
-                    Categories = feed.Categories,
+                    Categories = categories,
                     Description = feed.Description,
                     ImageUrl = feed.ImageUrl,
                     RssUrl = feed.RssUrl,

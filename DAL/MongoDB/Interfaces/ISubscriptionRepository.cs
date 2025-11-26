@@ -13,6 +13,6 @@ namespace DAL.MongoDB.Interfaces
         Task<IEnumerable<Subscription>> GetByUserIdAsync(string Email);
         public Task<bool> SubscriptionExists(string Email, string rssUrl);
 
-        Task<IEnumerable<Subscription>> GetByCategoryAsync(string UserEmail, string CategoryId);
+        public Task<List<Subscription>> GetByCategoryAsync(string userEmail, string categoryId);
     }
 }

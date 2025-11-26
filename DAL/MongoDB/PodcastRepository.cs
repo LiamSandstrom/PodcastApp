@@ -63,5 +63,25 @@ namespace DAL.MongoDB
 
             await UpdateAsync(podcast);
         }
+
+        public async Task<List<Podcast>> GetByCategory(string categoryId)
+        {
+            var filter = Builders<Podcast>.Filter.AnyEq(p => p.Categories, categoryId);
+
+            var podcasts = await _collection.Find(filter).ToListAsync();
+            return podcasts;
+        }
+        public async Task<List<Podcast>> GetByRssUrlsAndCategoryAsync(List<string> rssUrls, string categoryId)
+        {
+            var filter = Builders<Podcast>.Filter.And(
+                Builders<Podcast>.Filter.In(p => p.RssUrl, rssUrls),
+                Builders<Podcast>.Filter.AnyEq(p => p.Categories, categoryId)
+            );
+
+            return await _collection.Find(filter).ToListAsync();
+        }
+
+
     }
+
 }

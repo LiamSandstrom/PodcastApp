@@ -75,15 +75,18 @@ namespace UI.MVVM.ViewModel
                 CurrentView = HomeVM;
             });
 
-            CategoriesViewCommand = new RelayCommand(o =>
+            CategoriesViewCommand = new RelayCommand(async o =>
             {
+                await CategoriesVM.SetCategories();
                 CurrentView = CategoriesVM;
             });
 
             SubscriptionViewCommand = new RelayCommand(async o =>
             {
+                if (CurrentView == SubscriptionVM) return;
                 var subs = await Services.SubscriptionService.GetUserSubscriptionsAsync(Storage.Email);
                 SubscriptionVM.SetPodcasts(subs);
+                await SubscriptionVM.SetCategories();
                 CurrentView = SubscriptionVM;
             });
 
