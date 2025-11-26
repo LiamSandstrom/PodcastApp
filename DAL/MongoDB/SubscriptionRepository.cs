@@ -79,6 +79,32 @@ namespace DAL.MongoDB
             return await _collection.Find(filter).ToListAsync();
         }
 
+        public async Task<bool> AddCategory(string userEmail, string rssUrl, string categoryId)
+        {
+            var sub = await GetSubscriptionAsync(userEmail, rssUrl);
+            if (sub == null)
+                return false;
+
+            if (sub.CategoryId.Contains(categoryId)) return false;
+
+            sub.CategoryId.Add(categoryId);
+
+            await UpdateAsync(sub);
+
+            return true;
+        }
+
+        public async Task<bool> RemoveCategory(string userEmail, string rssUrl, string CategoryId)
+        {
+            var sub = await GetSubscriptionAsync(userEmail, rssUrl);
+            if (sub == null)
+                return false;
+
+            sub.CategoryId.Remove(CategoryId);
+            return await UpdateAsync(sub);
+        }
+
+
 
 
 

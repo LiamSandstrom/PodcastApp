@@ -145,6 +145,7 @@
                                     Background="Transparent"
                                     BorderThickness="0"
                                     Style="{StaticResource ModernButton}"
+                                    Command="{Binding AddCategoryCommand}"
                             Width="33"
                                     >
                             <Image 

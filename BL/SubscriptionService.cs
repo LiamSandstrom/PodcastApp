@@ -16,10 +16,12 @@ namespace BL
     {
         private readonly ISubscriptionRepository subscriptionRepo;
         private readonly IPodcastRepository podcastRepo;
-        public SubscriptionService(ISubscriptionRepository subRepo, IPodcastRepository podRepo)
+        private readonly ICategoryRepository categoryRepo;
+        public SubscriptionService(ISubscriptionRepository subRepo, IPodcastRepository podRepo, ICategoryRepository categoryRepo)
         {
             subscriptionRepo = subRepo;
             podcastRepo = podRepo;
+            this.categoryRepo = categoryRepo;
         }
         public async Task<bool> SubscribeAsync(string Email, string RssUrl, string customName)
         {
@@ -157,7 +159,7 @@ namespace BL
                     .Select(sub =>
                     {
                         var pod = podcasts.FirstOrDefault(p => p.RssUrl == sub.RssUrl);
-                        if (pod != null && pod.Categories.Contains(categoryId))
+                        if (pod != null && pod.Categories.Contains(categoryId) || sub.CategoryId.Contains(categoryId))
                         {
                             return new DTOsubscription
                             {
@@ -183,6 +185,45 @@ namespace BL
             }
         }
 
+
+        public async Task<bool> AddCategory(string email, string rssUrl, string categoryId)
+        {
+            try
+            {
+                await subscriptionRepo.AddCategory(email, rssUrl, categoryId);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+        }
+        public async Task<List<string>> GetCategoriesOnSubscription(string Email, string rssUrl)
+        {
+            try
+            {
+                var sub = await subscriptionRepo.GetSubscriptionAsync(Email, rssUrl);
+                var res = await categoryRepo.GetNamesByIds(sub.CategoryId);
+                return res;
+
+            }
+            catch (Exception ex)
+            {
+                return new List<string>();
+            }
+        }
+        public async Task<bool> RemoveCategory(string userEmail, string rssUrl, string CategoryId)
+        {
+            try
+            {
+                return await subscriptionRepo.RemoveCategory(userEmail, rssUrl, CategoryId);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
 
 
     }

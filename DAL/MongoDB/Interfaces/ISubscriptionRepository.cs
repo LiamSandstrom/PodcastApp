@@ -14,5 +14,7 @@ namespace DAL.MongoDB.Interfaces
         public Task<bool> SubscriptionExists(string Email, string rssUrl);
 
         public Task<List<Subscription>> GetByCategoryAsync(string userEmail, string categoryId);
+        public Task<bool> AddCategory(string userEmail, string rssUrl, string categoryId);
+        public Task<bool> RemoveCategory(string userEmail, string rssUrl, string CategoryId);
     }
 }

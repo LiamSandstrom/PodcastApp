@@ -75,7 +75,7 @@ namespace UI.Core
 
             //Services
             PodcastService = new PodcastService(podRepo, rssRepo, categoryRepo);
-            SubscriptionService = new SubscriptionService(subRepo, podRepo);
+            SubscriptionService = new SubscriptionService(subRepo, podRepo, categoryRepo);
             UserService = new UserService(userRepo);
             CategoryService = new CategoryService(categoryRepo);
         }

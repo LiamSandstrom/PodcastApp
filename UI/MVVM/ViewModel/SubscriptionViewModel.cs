@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using UI.Core;
+using UI.MVVM.View;
 
 namespace UI.MVVM.ViewModel
 {
@@ -42,6 +43,7 @@ namespace UI.MVVM.ViewModel
             {
                 await SortPodcasts();
             });
+
         }
 
         public void SetPodcasts(List<DTOsubscription> podcasts)
@@ -77,5 +79,7 @@ namespace UI.MVVM.ViewModel
             var res = await Services.SubscriptionService.GetSubscribedPodcastsByCategory(Storage.Email, SelectedCategory.Id);
             SetPodcasts(res);
         }
+
+
     }
 }
