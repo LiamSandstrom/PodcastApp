@@ -1,9 +1,10 @@
-﻿using System;
+﻿using BL.DTOmodels;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BL.DTOmodels;
 
 namespace BL.Interfaces
 {
@@ -19,5 +20,6 @@ namespace BL.Interfaces
         public Task<bool> AddCategory(string email, string rssUrl, string categoryId);
         public Task<List<string>> GetCategoriesOnSubscription(string Email, string rssUrl);
         public Task<bool> RemoveCategory(string userEmail, string rssUrl, string CategoryId);
+        public Task<List<DTOsubscription>> GetMostPopular();
     }
 }

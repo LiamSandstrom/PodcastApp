@@ -64,7 +64,10 @@ namespace UI.MVVM.ViewModel
 
         public MainViewModel()
         {
-            HomeVM = new HomeViewModel();
+            HomeVM = new HomeViewModel(this);
+
+            HomeVM.SetPodcasts();
+
             CategoriesVM = new CategoriesViewModel();
             SubscriptionVM = new SubscriptionViewModel(this);
             PodcastVM = new PodcastViewModel(this);

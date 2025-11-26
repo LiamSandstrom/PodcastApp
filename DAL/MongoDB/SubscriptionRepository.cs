@@ -1,5 +1,6 @@
 ﻿using DAL.MongoDB.Interfaces;
 using Models;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -103,9 +104,28 @@ namespace DAL.MongoDB
             sub.CategoryId.Remove(CategoryId);
             return await UpdateAsync(sub);
         }
+        public async Task<List<string>> GetTopLikedPodcasts(int topCount)
+        {
+            var group = new BsonDocument
+    {
+        { "_id", "$RssUrl" },
+        { "count", new BsonDocument("$sum", 1) }
+    };
 
+            var sort = new BsonDocument("count", -1);
 
+            var pipeline = new[]
+            {
+        new BsonDocument("$group", group),
+        new BsonDocument("$sort", sort),
+        new BsonDocument("$limit", topCount)
+    };
 
+            var result = await _collection.Aggregate<BsonDocument>(pipeline).ToListAsync();
+
+            // Return only the RSS URLs
+            return result.Select(r => r["_id"].AsString).ToList();
+        }
 
 
     }

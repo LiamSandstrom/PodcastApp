@@ -225,6 +225,37 @@ namespace BL
             }
         }
 
+        public async Task<List<DTOsubscription>> GetMostPopular()
+        {
+            try
+            {
+                var rssUrls = await subscriptionRepo.GetTopLikedPodcasts(10);
+                var podcasts = await podcastRepo.GetAllByRssAsync(rssUrls);
+
+                var res = new List<DTOsubscription>();
+
+                foreach (var podcast in podcasts)
+                {
+                    var sub = new DTOsubscription
+                    {
+                        RssUrl = podcast.RssUrl,
+                        PodcastTitle = podcast.Title,
+                        CustomName = podcast.Title,
+                        PodcastImgUrl = podcast.ImageUrl,
+                    };
+
+                    res.Add(sub);
+                }
+
+                return res;
+            }
+            catch (Exception ex)
+            {
+                return new List<DTOsubscription>();
+            }
+
+        }
+
 
     }
 }
