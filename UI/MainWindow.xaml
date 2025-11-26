@@ -106,7 +106,7 @@
                          Command="{Binding HomeViewCommand}"
                                  />
 
-                    <RadioButton Content="Categories"
+                    <RadioButton Content="Manage Categories"
                          Height="50"
                          FontSize="17"
                          Style="{StaticResource MenuButtonTheme}"
