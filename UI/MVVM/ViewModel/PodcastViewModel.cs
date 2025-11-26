@@ -220,10 +220,10 @@ namespace UI.MVVM.ViewModel
             else
             {
                 Categories.Add(name);
+                _popupRef.Close();
+                _popupRef = null;
             }
 
-            _popupRef.Close();
-            _popupRef = null;
 
         }
 
@@ -240,14 +240,14 @@ namespace UI.MVVM.ViewModel
             if (Categories.Contains(name))
             {
                 Categories.Remove(name);
+                _popupRef.Close();
+                _popupRef = null;
             }
             else
             {
                 MessageBox.Show("Podcast does not have this Category :(");
             }
 
-            _popupRef.Close();
-            _popupRef = null;
 
         }
 
