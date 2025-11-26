@@ -11,8 +11,8 @@
 
             <!-- dictionaries -->
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Theme/MenuButtonTheme.xaml"/>
                 <ResourceDictionary Source="/Theme/CleanButton.xaml"/>
+                <ResourceDictionary Source="/Theme/MenuButtonTheme.xaml"/>
                 <ResourceDictionary Source="/Theme/DropDown.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
@@ -39,10 +39,6 @@
             </DataTemplate>
 
 
-            <!-- Controls -->
-            <Style TargetType="Control">
-                <Setter Property="Foreground" Value="LightGray"/>
-            </Style>
 
             <!-- Text/Labels -->
             <Style TargetType="TextBlock">

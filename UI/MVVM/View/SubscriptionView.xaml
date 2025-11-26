@@ -10,11 +10,11 @@
           VerticalAlignment="Top">
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="50" />
+            <RowDefinition Height="100" />
             <RowDefinition  Height="*" />
         </Grid.RowDefinitions>
 
-        <ComboBox  Width="150" ItemsSource="{Binding Categories}"
+        <ComboBox  Width="150" Height="40" ItemsSource="{Binding Categories}"
           SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
           DisplayMemberPath="Name"
 />
