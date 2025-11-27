@@ -17,54 +17,64 @@ namespace BL
         private readonly ISubscriptionRepository subscriptionRepo;
         private readonly IPodcastRepository podcastRepo;
         private readonly ICategoryRepository categoryRepo;
-        public SubscriptionService(ISubscriptionRepository subRepo, IPodcastRepository podRepo, ICategoryRepository categoryRepo)
+        private readonly IUnitOfWork _unitOfWork;
+
+        public SubscriptionService(ISubscriptionRepository subRepo, IPodcastRepository podRepo, ICategoryRepository categoryRepo, IUnitOfWork unitOfWork)
         {
             subscriptionRepo = subRepo;
             podcastRepo = podRepo;
             this.categoryRepo = categoryRepo;
+            _unitOfWork = unitOfWork;
         }
         public async Task<bool> SubscribeAsync(string Email, string RssUrl, string customName)
         {
+            await _unitOfWork.StartTransactionAsync();
             try
             {
                 var podcast = await podcastRepo.GetByRssAsync(RssUrl);
                 if (podcast == null)
                     return false;
 
-
-                var existing = await subscriptionRepo.SubscriptionExists(Email, RssUrl);
-                if (existing == true)
+                var exists = await subscriptionRepo.SubscriptionExists(Email, RssUrl);
+                if (exists)
                     return false;
-
 
                 var sub = new Subscription
                 {
                     Email = Email,
                     RssUrl = RssUrl,
                     CustomName = string.IsNullOrWhiteSpace(customName) ? podcast.Title : customName,
-                    SubscribedAt = DateTime.Now
+                    SubscribedAt = DateTime.UtcNow
                 };
 
-                await subscriptionRepo.AddAsync(sub);
+                await subscriptionRepo.AddAsync(sub, _unitOfWork.Session);
+
+                await _unitOfWork.CommitAsync();
                 return true;
             }
-            catch (Exception ex)
+            catch
             {
+                await _unitOfWork.RollbackAsync();
                 return false;
             }
         }
         public async Task<bool> UnsubscribeAsync(string Email, string RssUrl)
         {
+            await _unitOfWork.StartTransactionAsync();
             try
             {
                 var existing = await subscriptionRepo.GetSubscriptionAsync(Email, RssUrl);
                 if (existing == null)
                     return false;
 
-                return await subscriptionRepo.DeleteAsync(existing.Id);
+                var result = await subscriptionRepo.DeleteAsync(existing.Id, _unitOfWork.Session);
+
+                await _unitOfWork.CommitAsync();
+                return result;
             }
-            catch (Exception ex)
+            catch
             {
+                await _unitOfWork.RollbackAsync();
                 return false;
             }
         }
@@ -101,20 +111,25 @@ namespace BL
             }
         }
 
-        public async Task<bool> RenameSubscriptionAsync(string userId, string podcastId, string newName)
+        public async Task<bool> RenameSubscriptionAsync(string Email, string RssUrl, string newName)
         {
+            await _unitOfWork.StartTransactionAsync();
             try
             {
-                var sub = await subscriptionRepo.GetSubscriptionAsync(userId, podcastId);
+                var sub = await subscriptionRepo.GetSubscriptionAsync(Email, RssUrl);
                 if (sub == null)
                     return false;
 
                 sub.CustomName = newName;
-                return await subscriptionRepo.UpdateAsync(sub);
 
+                var result = await subscriptionRepo.UpdateAsync(sub, _unitOfWork.Session);
+
+                await _unitOfWork.CommitAsync();
+                return result;
             }
-            catch (Exception ex)
+            catch
             {
+                await _unitOfWork.RollbackAsync();
                 return false;
             }
         }
