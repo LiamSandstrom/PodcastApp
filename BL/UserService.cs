@@ -13,19 +13,22 @@ namespace BL
    public class UserService : IUserService
     {
         private readonly IUserRepository userRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UserService (IUserRepository userRepo)
+        public UserService (IUserRepository userRepo, IUnitOfWork unitOfWork)
         {
             userRepository = userRepo;
+            _unitOfWork = unitOfWork;
         }
         public async Task<bool> CreateUserAsync(string email)
         {
             try
             {
-
                 if (!IsValidEmail(email))
                     return false;
 
+                await _unitOfWork.StartTransactionAsync();
+                var session = _unitOfWork.Session;
 
                 var user = new User
                 {
@@ -34,13 +37,14 @@ namespace BL
                     CreatedAt = DateTime.Now
                 };
 
+                await userRepository.AddAsync(user, session);
 
-                var result = await userRepository.AddAsync(user);
-
+                await _unitOfWork.CommitAsync();
                 return true;
             }
-            catch (Exception ex)
+            catch
             {
+                await _unitOfWork.RollbackAsync();
                 return false;
             }
         }

@@ -7,6 +7,7 @@ using DAL.Rss.Interfaces;
 using DTO;
 using Microsoft.Extensions.Logging;
 using Models;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,12 +24,14 @@ namespace BL
         private readonly IPodcastRepository podcastRepo;
         private readonly ICategoryRepository categoryRepo;
         private int amountOfEpisodes = 10;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public PodcastService(IPodcastRepository podcastRepository, IRssRepository rssRepository, ICategoryRepository categoryRepository)
+        public PodcastService(IPodcastRepository podcastRepository, IRssRepository rssRepository, ICategoryRepository categoryRepository, IUnitOfWork unitOfWork)
         {
             rssRepo = rssRepository;
             podcastRepo = podcastRepository;
             categoryRepo = categoryRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<DTOpodcast> GetPodcastAsync(string rssUrl, int amountOfEpisodes)
@@ -71,24 +74,46 @@ namespace BL
             }
         }
 
+        
         public async Task<DTOpodcast> GetPodcastFromRssAsync(string rssUrl, int amountOfEpisodes)
         {
             try
             {
                 var feed = await rssRepo.GetFeed(rssUrl);
-                List<string> categories = new();
-                foreach (var category in feed.Categories)
-                {
-                    Category res = new Category
-                    {
-                        Name = category,
-                        UserEmail = null
-                    };
-                    var cat = await categoryRepo.AddAsync(res);
-                    categories.Add(cat.Id);
-                }
-                await AddPodcast(feed, categories);
 
+                await _unitOfWork.StartTransactionAsync();
+
+                try
+                {
+                   
+                    List<string> categories = new();
+
+                    foreach (var category in feed.Categories)
+                    {
+                        Category newCat = new Category
+                        {
+                            Name = category,
+                            UserEmail = null
+                        };
+
+                        var savedCat = await categoryRepo.AddAsync(newCat, _unitOfWork.Session);
+                        categories.Add(savedCat.Id);
+                    }
+
+                    
+                    await AddPodcast(feed, categories);
+
+                   
+                    await _unitOfWork.CommitAsync();
+                }
+                catch
+                {
+                    
+                    await _unitOfWork.RollbackAsync();
+                    throw;
+                }
+
+               
                 var allEpisodes = feed.Items.Select(item => new DTOepisode
                 {
                     Title = item.Title,
@@ -96,13 +121,11 @@ namespace BL
                     EpisodeNumber = item.EpisodeNumber,
                     DateAndDuration = FormatDateAndDuration(item.PublishDate, item.Duration),
                     Date = item.PublishDate
-
-
                 }).ToList();
 
                 var limitedEpisodes = allEpisodes.Take(amountOfEpisodes).ToList();
 
-                var dtoPodd = new DTOpodcast
+                return new DTOpodcast
                 {
                     Title = feed.Title,
                     Description = feed.Description,
@@ -112,12 +135,8 @@ namespace BL
                     RssUrl = feed.RssUrl,
                     Episodes = limitedEpisodes,
                 };
-
-
-
-                return dtoPodd;
             }
-            catch (Exception ex)
+            catch
             {
                 return null;
             }
@@ -226,11 +245,27 @@ namespace BL
                     LastUpdated = DateTime.Now,
                 };
 
-                await podcastRepo.AddAsync(pod);
+                await _unitOfWork.StartTransactionAsync();
 
+                try
+                {
+                    
+                    await podcastRepo.AddAsync( pod, _unitOfWork.Session);
+
+                    
+                    await _unitOfWork.CommitAsync();
+                }
+                catch
+                {
+                   
+                    await _unitOfWork.RollbackAsync();
+                    throw;
+                }
             }
+            
             catch (Exception ex)
             {
+
             }
         }
 
@@ -259,6 +294,7 @@ namespace BL
 
             return date + " - " + hours + " " + minutes;
         }
+        
         public async Task<List<DTOepisode>> CheckForNewEpisodesAsync(DTOpodcast podcast)
         {
             try
@@ -269,10 +305,10 @@ namespace BL
                 if (string.IsNullOrWhiteSpace(podcast.RssUrl))
                     throw new ArgumentException("Podcast is missing RSS url");
 
-
+                
                 RssFeed feed = await rssRepo.GetFeed(podcast.RssUrl);
 
-
+                
                 var rssEpisodes = feed.Items
                     .Select(item => new DTOepisode
                     {
@@ -282,39 +318,59 @@ namespace BL
                         Date = item.PublishDate.ToUniversalTime(),
                         DateAndDuration = $"{item.PublishDate.ToShortDateString()} | {item.Duration}"
                     })
+                    .OrderByDescending(ep => ep.Date)
+                    .Take(amountOfEpisodes)
                     .OrderBy(ep => ep.Date)
                     .ToList();
 
-
+                
                 var latestSaved = podcast.Episodes
                     .OrderByDescending(e => e.Date)
                     .FirstOrDefault();
 
-
+               
                 var newEpisodes = latestSaved == null
                     ? rssEpisodes
                     : rssEpisodes.Where(ep => ep.Date > latestSaved.Date).ToList();
 
+                if (!newEpisodes.Any())
+                    return newEpisodes; // Inga nya → klart
 
-                if (newEpisodes.Any())
+               
+                var dbPodcast = await podcastRepo.GetByRssAsync(podcast.RssUrl);
+                if (dbPodcast == null)
+                    return newEpisodes;
+
+              
+                await _unitOfWork.StartTransactionAsync();
+
+                try
                 {
-
-                    var dbPodcast = await podcastRepo.GetByRssAsync(podcast.RssUrl);
-
-                    if (dbPodcast != null)
+                   
+                    var dbEpisodes = newEpisodes.Select(ep => new Episode
                     {
+                        Title = ep.Title,
+                        Description = ep.Description,
+                        EpisodeNumber = ep.EpisodeNumber,
+                        PublishTime = ep.Date,
+                        Duration = ep.DateAndDuration
+                    }).ToList();
 
-                        var dbEpisodes = newEpisodes.Select(ep => new Episode
-                        {
-                            Title = ep.Title,
-                            Description = ep.Description,
-                            EpisodeNumber = ep.EpisodeNumber,
-                            PublishTime = ep.Date,
-                            Duration = ep.DateAndDuration
-                        }).ToList();
+                    
+                    await podcastRepo.AddNewEpisodesAsync(
+                        dbPodcast.Id,
+                        dbEpisodes,
+                        _unitOfWork.Session
+                    );
 
-                        await podcastRepo.AddNewEpisodesAsync(dbPodcast.Id, dbEpisodes);
-                    }
+                   
+                    await _unitOfWork.CommitAsync();
+                }
+                catch
+                {
+                    
+                    await _unitOfWork.RollbackAsync();
+                    throw;
                 }
 
                 return newEpisodes;

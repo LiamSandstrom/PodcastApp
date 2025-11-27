@@ -31,7 +31,7 @@ namespace DAL.MongoDB
         }
 
 
-        public async override Task<Subscription> AddAsync(Subscription entity)
+        public async override Task<Subscription> AddAsync(Subscription entity, IClientSessionHandle Session)
         {
             try
             {

@@ -29,7 +29,7 @@ namespace DAL.MongoDB
             );
         }
 
-        public async override Task<Category> AddAsync(Category entity)
+        public async override Task<Category> AddAsync(Category entity, IClientSessionHandle Session)
         {
             try
             {

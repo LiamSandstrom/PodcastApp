@@ -14,7 +14,7 @@ namespace DAL.MongoDB
         public PodcastRepository(IMongoDatabase db)
             : base(db, "Podcast") { }
 
-        public async override Task<Podcast> AddAsync(Podcast entity)
+        public async override Task<Podcast> AddAsync(Podcast entity, IClientSessionHandle Session)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace DAL.MongoDB
 
 
 
-        public async Task AddNewEpisodesAsync(string podcastId, List<Episode> newEpisodes)
+        public async Task AddNewEpisodesAsync(string podcastId, List<Episode> newEpisodes, IClientSessionHandle Session)
         {
             if (string.IsNullOrWhiteSpace(podcastId) || newEpisodes == null || !newEpisodes.Any())
                 return;
@@ -61,7 +61,7 @@ namespace DAL.MongoDB
             podcast.LastUpdated = DateTime.UtcNow;
 
 
-            await UpdateAsync(podcast);
+            await UpdateAsync(podcast,  Session);
         }
 
         public async Task<List<Podcast>> GetByCategory(string categoryId)

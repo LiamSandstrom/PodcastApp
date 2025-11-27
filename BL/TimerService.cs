@@ -13,15 +13,17 @@ namespace BL
     {
         private readonly PodcastService poddService;
         private readonly IPodcastRepository poddRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
         private Timer _timer;
         private int _intervalMinutes;
 
-        public TimerService(PodcastService podcastService, IPodcastRepository podcastRepo, int intervalMinutes)
+        public TimerService(PodcastService podcastService, IPodcastRepository podcastRepo, int intervalMinutes, IUnitOfWork unitOfWork)
         {
             poddService = podcastService;
             poddRepo = podcastRepo;
             _intervalMinutes = intervalMinutes;
+            _unitOfWork = unitOfWork;
         }
 
         public void Start()
@@ -60,26 +62,38 @@ namespace BL
 
                 var newEpisodes = await poddService.CheckForNewEpisodesAsync(dtoPod);
 
-                if (newEpisodes.Any())
+                if (!newEpisodes.Any())
+                    continue;
+
+                Console.WriteLine($"Ny episod hittad i {pod.Title}:");
+                foreach (var ep in newEpisodes)
+                    Console.WriteLine($"  • {ep.Title}");
+
+                var mappedEpisodes = newEpisodes.Select(ep => new Episode
                 {
-                    Console.WriteLine($"Ny episod hittad i {pod.Title}:");
+                    Title = ep.Title,
+                    Description = ep.Description,
+                    EpisodeNumber = ep.EpisodeNumber,
+                    PublishTime = ep.Date,
+                    Duration = ep.DateAndDuration
+                }).ToList();
 
-                    foreach (var ep in newEpisodes)
-                    {
-                        Console.WriteLine($"  • {ep.Title}");
+                
+                await _unitOfWork.StartTransactionAsync();
+                var session = _unitOfWork.Session;
 
-                    }
-                    var mappedEpisode = newEpisodes.Select(ep => new Episode
-                    {
-                        Title = ep.Title,
-                        Description = ep.Description,
-                        EpisodeNumber = ep.EpisodeNumber,
-                        PublishTime = ep.Date,
-                        Duration = ep.DateAndDuration
-                    }).ToList();
+                try
+                {
+                    await poddRepo.AddNewEpisodesAsync(pod.Id, mappedEpisodes, session);
 
-                    await poddRepo.AddNewEpisodesAsync(pod.Id, mappedEpisode);
-
+                    
+                    await _unitOfWork.CommitAsync();
+                }
+                catch
+                {
+                    
+                    await _unitOfWork.RollbackAsync();
+                    throw;
                 }
             }
         }

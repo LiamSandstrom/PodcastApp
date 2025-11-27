@@ -1,12 +1,13 @@
-﻿using DAL.MongoDB.Interfaces;
-using Models;
-using Models.Interfaces;
-using MongoDB.Driver;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DAL.MongoDB.Interfaces;
+using Models;
+using Models.Interfaces;
+using MongoDB.Driver;
+using static System.Collections.Specialized.BitVector32;
 
 namespace DAL.MongoDB
 {
@@ -22,9 +23,9 @@ namespace DAL.MongoDB
         }
 
         //let implementing repos define add. Remember to set the key you add on to unique 
-        abstract public Task<T> AddAsync(T entity);
+        abstract public Task<T> AddAsync(T entity,IClientSessionHandle Session);
 
-        public async Task<bool> DeleteAsync(string id)
+        public async Task<bool> DeleteAsync(string id, IClientSessionHandle Session)
         {
             ValidateId(id);
 
@@ -45,7 +46,7 @@ namespace DAL.MongoDB
             return await _collection.Find(e => e.Id == id).FirstOrDefaultAsync();
         }
 
-        public async Task<bool> UpdateAsync(T entity)
+        public async Task<bool> UpdateAsync(T entity, IClientSessionHandle Session)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
             ValidateId(entity.Id);

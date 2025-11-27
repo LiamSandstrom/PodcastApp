@@ -16,7 +16,7 @@ namespace DAL.MongoDB
         {
         }
 
-        public async override Task<User> AddAsync(User entity)
+        public async override Task<User> AddAsync(User entity, IClientSessionHandle Session)
         {
             try
             {

@@ -14,10 +14,12 @@ namespace BL
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _repo;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CategoryService(ICategoryRepository repo)
+        public CategoryService(ICategoryRepository repo, IUnitOfWork unitOfWork)
         {
             _repo = repo;
+            _unitOfWork = unitOfWork;
         }
 
 
@@ -31,9 +33,24 @@ namespace BL
                     UserEmail = userEmail
                 };
 
-                return await _repo.AddAsync(category);
+                
+                await _unitOfWork.StartTransactionAsync();
+
+                try
+                {
+                    
+                    var created = await _repo.AddAsync(category, _unitOfWork.Session);
+
+                    await _unitOfWork.CommitAsync();
+                    return created;
+                }
+                catch
+                {
+                    await _unitOfWork.RollbackAsync();
+                    throw;
+                }
             }
-            catch (Exception ex)
+            catch
             {
                 return null;
             }
@@ -89,26 +106,30 @@ namespace BL
 
         public async Task<bool> RenameCategory(string id, string newName, string currentUserEmail)
         {
+            await _unitOfWork.StartTransactionAsync();
+
             try
             {
                 var existing = await _repo.GetByIdAsync(id);
-
                 if (existing == null)
                     return false;
 
                 if (existing.UserEmail == null)
                     throw new InvalidOperationException("Standard categories cannot be renamed.");
 
-
                 if (existing.UserEmail != currentUserEmail)
                     throw new UnauthorizedAccessException("You can only rename your own categories.");
 
                 existing.Name = newName;
 
-                return await _repo.UpdateAsync(existing);
+                var result = await _repo.UpdateAsync(existing, _unitOfWork.Session);
+
+                await _unitOfWork.CommitAsync();
+                return result;
             }
-            catch (Exception ex)
+            catch
             {
+                await _unitOfWork.RollbackAsync();
                 return false;
             }
         }
@@ -118,24 +139,28 @@ namespace BL
         {
             try
             {
-                var existing = await _repo.GetByIdAsync(id);
+                await _unitOfWork.StartTransactionAsync();
 
+                
+                var existing = await _repo.GetByIdAsync(id);
                 if (existing == null)
                     return false;
-
 
                 if (existing.UserEmail == null)
                     throw new InvalidOperationException("Standard categories cannot be deleted.");
 
-
                 if (existing.UserEmail != currentUserEmail)
                     throw new UnauthorizedAccessException("You can only delete your own categories.");
 
-                return await _repo.DeleteAsync(id);
-            }
+                
+                var success = await _repo.DeleteAsync(id, _unitOfWork.Session);
 
-            catch (Exception ex)
+                await _unitOfWork.CommitAsync();
+                return success;
+            }
+            catch
             {
+                await _unitOfWork.RollbackAsync();
                 return false;
             }
         }
