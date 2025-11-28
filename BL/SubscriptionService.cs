@@ -205,11 +205,32 @@ namespace BL
         {
             try
             {
-                await subscriptionRepo.AddCategory(email, rssUrl, categoryId);
+                await _unitOfWork.StartTransactionAsync();
+                var session = _unitOfWork.Session;
+
+                var sub = await subscriptionRepo.GetSubscriptionAsync(email, rssUrl);
+                if (sub == null)
+                {
+                    await _unitOfWork.RollbackAsync();
+                    return false;
+                }
+
+                if (sub.CategoryId.Contains(categoryId))
+                {
+                    await _unitOfWork.RollbackAsync();
+                    return false;
+                }
+
+                sub.CategoryId.Add(categoryId);
+
+                await subscriptionRepo.UpdateAsync(sub, session);
+
+                await _unitOfWork.CommitAsync();
                 return true;
             }
-            catch (Exception ex)
+            catch
             {
+                await _unitOfWork.RollbackAsync();
                 return false;
             }
 
@@ -232,10 +253,26 @@ namespace BL
         {
             try
             {
-                return await subscriptionRepo.RemoveCategory(userEmail, rssUrl, CategoryId);
+                await _unitOfWork.StartTransactionAsync();
+                var session = _unitOfWork.Session;
+
+                var sub = await subscriptionRepo.GetSubscriptionAsync(userEmail, rssUrl);
+                if (sub == null)
+                {
+                    await _unitOfWork.RollbackAsync();
+                    return false;
+                }
+
+                sub.CategoryId.Remove(CategoryId);
+
+                await subscriptionRepo.UpdateAsync(sub, session);
+
+                await _unitOfWork.CommitAsync();
+                return true;
             }
-            catch (Exception ex)
+            catch
             {
+                await _unitOfWork.RollbackAsync();
                 return false;
             }
         }

@@ -72,12 +72,14 @@ namespace UI.Core
             var subRepo = new SubscriptionRepository(db);
             var userRepo = new UserRepository(db);
             var categoryRepo = new CategoryRepository(db);
+            var unitOfWork = new MongoUnitOfWork(client);
+
 
             //Services
-            PodcastService = new PodcastService(podRepo, rssRepo, categoryRepo);
-            SubscriptionService = new SubscriptionService(subRepo, podRepo, categoryRepo);
-            UserService = new UserService(userRepo);
-            CategoryService = new CategoryService(categoryRepo);
+            PodcastService = new PodcastService(podRepo, rssRepo, categoryRepo, unitOfWork);
+            SubscriptionService = new SubscriptionService(subRepo, podRepo, categoryRepo, unitOfWork);
+            UserService = new UserService(userRepo, unitOfWork);
+            CategoryService = new CategoryService(categoryRepo, unitOfWork);
         }
     }
 }
