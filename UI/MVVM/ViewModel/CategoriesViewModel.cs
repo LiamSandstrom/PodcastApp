@@ -83,7 +83,18 @@ namespace UI.MVVM.ViewModel
             RemoveCommand = new RelayCommand(async o =>
             {
                 if (SelectedCategory == null) return;
+
+                var result = MessageBox.Show(
+                    $"Are you sure you want to delete '{SelectedCategory.Name}'?",
+                    "Confirm Delete",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning
+                );
+
+                if (result != MessageBoxResult.Yes) return;
+
                 var res = await Services.CategoryService.DeleteCategory(SelectedCategory.Id, Storage.Email);
+
                 if (res != null)
                 {
                     await SetCategories();
@@ -95,6 +106,7 @@ namespace UI.MVVM.ViewModel
                     MessageBox.Show("Failed to Delete category...");
                 }
             });
+
 
             RenameCommand = new RelayCommand(async o =>
             {
