@@ -62,7 +62,7 @@ namespace UI.Core
                 throw new Exception("Missing MONGO_URI environment variable!");
 
             var client = new MongoClient(mongoUri);
-            string databaseName = "PodcastDB";
+            string databaseName = "Opponering";
             var db = client.GetDatabase(databaseName);
 
             //Repos
